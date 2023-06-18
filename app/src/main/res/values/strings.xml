@@ -3,6 +3,9 @@
     <string name="main_title">Мои дела</string>
     <string name="fab_description">Добавить заметку</string>
     <string name="empty_list_notification">Нет заметок</string>
+    <string name="tasks_done">Выполнено %s</string>
+    <string name="img_description_check">Отметить</string>
+    <string name="img_description_info">Информация, правка</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
 

@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
-import com.way2mars.kotlin.todoapp.R
 import com.way2mars.kotlin.todoapp.databinding.FragmentScrollingBinding
 
 
@@ -20,9 +20,8 @@ class ScrollingFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentScrollingBinding.inflate(layoutInflater, container, false)
-//        binding.collapsingToolbarLayout.title = "Мои дела"
 
         return binding.root
     }
@@ -36,10 +35,16 @@ class ScrollingFragment : Fragment() {
                 .setAction("Action", null).show()
         }
 
+        val recyclerView: RecyclerView = binding.todoRecyclerView
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        recyclerView.adapter = TodoRecyclerAdapter()
+
         // Eye button listener
 //        binding.isVisibleDoneTask.setOnClickListener {
 //            bind ing.isVisibleDoneTask.isActivated = !binding.isVisibleDoneTask.isActivated
 //            viewModel.isVisibleDone = binding.isVisibleDoneTask.isActivated
+
+//        binding.todoRecyclerView.add
 
 
         // Task RecyclerView

@@ -5,6 +5,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="?attr/back_primary"
         android:fitsSystemWindows="true"
         tools:context=".view.ScrollingFragment">
 
@@ -20,14 +21,13 @@
                 android:fitsSystemWindows="true"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:toolbarId="@+id/toolbar"
+                android:background="@android:color/transparent"
+                app:toolbarId="@id/main_fragment_toolbar"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed"
                 app:contentScrim="@android:color/transparent"
-                android:background="@android:color/holo_blue_light"
                 app:title="@string/main_title"
-                app:expandedTitleMarginStart="32dp"
-                app:expandedTitleMarginEnd="48dp"
-                app:expandedTitleMarginBottom="32dp">
+                app:expandedTitleMarginStart="?attr/collapsing_toolbar_padding_start"
+                app:expandedTitleMarginBottom="?attr/collapsing_toolbar_title_padding_bottom">
 
             <androidx.appcompat.widget.Toolbar
                     android:id="@+id/main_fragment_toolbar"
@@ -39,7 +39,11 @@
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/fab_description"
+                    android:text="@string/tasks_done"
+                    tools:text="@string/tasks_done"
+                    android:textSize="16sp"
+                    android:layout_marginStart="?attr/collapsing_toolbar_padding_start"
+                    android:layout_marginBottom="?attr/collapsing_toolbar_padding_bottom"
                     android:fitsSystemWindows="true"
                     android:layout_gravity="start|bottom"
                     app:layout_collapseMode="parallax"/>
@@ -50,12 +54,26 @@
                     android:text="o"
                     android:fitsSystemWindows="true"
                     android:layout_gravity="end|bottom"
+                    android:layout_marginBottom="?attr/collapsing_toolbar_padding_bottom"
+                    android:layout_marginEnd="16dp"
                     app:layout_collapseMode="pin"/>
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include layout="@layout/content_scrolling"/>
+
+
+
+    <!-- switch from background color to rounded drawable-->
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/todo_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:layout_margin="10dp"
+            android:background="@drawable/bg_todo_recycler_view"
+            tools:listitem="@layout/todo_item_view"
+            tools:itemCount="20"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab"
