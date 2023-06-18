@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="back_primary" format="color|reference"/>
+    <attr name="label_primary" format="color|reference"/>
+    <attr name="label_tertiary" format="color|reference"/>
+</resources>
