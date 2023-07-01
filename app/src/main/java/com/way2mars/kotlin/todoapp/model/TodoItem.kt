@@ -43,9 +43,10 @@ data class TodoItem(
 }
 
 // fabric method to create a random TodoItem with a given id
-fun todoItemFromRandom(id: Int): TodoItem {
+fun todoItemFromRandom(x: Int): TodoItem {
     return TodoItem(
-        id = "Uuid-$id",
+        id = x.toString().padStart(12, '0'),
+
         text = when (Random.nextInt(0, 3)) {
             0 -> "Купить что-то"
             1 -> "Купить что-то, где-то, зачем-то, но зачем не очень понятно"

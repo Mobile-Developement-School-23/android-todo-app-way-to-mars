@@ -5,9 +5,12 @@ import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import com.way2mars.kotlin.todoapp.model.TodoItemsRepository
 
 
 class TodoApplication : Application() {
+
+    val repository = TodoItemsRepository()
 
     companion object {
         var colorStateListGreenLight: ColorStateList? = null
@@ -25,7 +28,8 @@ class TodoApplication : Application() {
 
         colorStateListGreenLight = ColorStateList(
             arrayOf(
-                intArrayOf(android.R.attr.state_checked), intArrayOf(-android.R.attr.state_checked)
+                intArrayOf(android.R.attr.state_checked),
+                intArrayOf(-android.R.attr.state_checked)
             ), intArrayOf(
                 ContextCompat.getColor(this, R.color.green_light_theme),
                 ContextCompat.getColor(this, R.color.gray_light_light_theme)

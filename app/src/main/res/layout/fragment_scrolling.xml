@@ -7,7 +7,7 @@
         android:layout_height="match_parent"
         android:background="?attr/back_primary"
         android:fitsSystemWindows="true"
-        tools:context=".view.ScrollingFragment">
+        tools:context=".screens.ScrollingFragment">
 
     <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/app_bar"
@@ -60,8 +60,6 @@
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
-
-
 
 
     <!-- switch from background color to rounded drawable-->

@@ -1,5 +1,8 @@
 package com.way2mars.kotlin.todoapp.model
 
+import java.util.*
+import kotlin.collections.ArrayList
+
 /**
  * The repository of Todo_Items as StateFlow Repository
  *
@@ -20,9 +23,9 @@ class TodoItemsRepository {
     private var listeners = mutableSetOf<TodoItemListener>()  // all the listeners
 
     // create 20 random TodoItems
-    init { for (i in 1..20)  todoItems.add(todoItemFromRandom(id = i)) }
+    init { for (i in 1..20) todoItems.add(todoItemFromRandom(i)) }
 
-    fun getTasks() = todoItems
+    fun getAllTasks() = todoItems
 
     fun getSize() = todoItems.size
 
@@ -38,13 +41,22 @@ class TodoItemsRepository {
         notifyChanges()
     }
 
-    fun removeTodoItem(todoItem: TodoItem?) {
+    fun removeItem(todoItem: TodoItem?) {
         if (todoItem == null) return
         val index = todoItems.indexOfFirst { it.id == todoItem.id }
         if (index == -1) return  // do nothing if there's no such a task
 
         todoItems = ArrayList(todoItems)
         todoItems.removeAt(index)
+        notifyChanges()
+    }
+
+    fun moveItem(todoItem: TodoItem, moveBy: Int){
+        val oldIndex = todoItems.indexOfFirst { it.id == todoItem.id }
+        if (oldIndex == -1) return
+
+        val newIndex = oldIndex + moveBy
+        Collections.swap(todoItems, oldIndex, newIndex)
         notifyChanges()
     }
 
