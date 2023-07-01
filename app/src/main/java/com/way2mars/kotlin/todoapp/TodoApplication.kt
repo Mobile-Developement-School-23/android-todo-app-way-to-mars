@@ -12,16 +12,12 @@ class TodoApplication : Application() {
     companion object {
         var colorStateListGreenLight: ColorStateList? = null
             private set
-
         var colorStateListRed: ColorStateList? = null
             private set
-
-        var imageTypeCommon: Drawable? = null
+        var imageTypeLow: Drawable? = null
             private set
-
         var imageTypeHigh: Drawable? = null
             private set
-
     }
 
     override fun onCreate() {
@@ -36,7 +32,7 @@ class TodoApplication : Application() {
             )
         )
         colorStateListRed = ColorStateList.valueOf(this.resources.getColor(R.color.red, null))
-        imageTypeCommon = ResourcesCompat.getDrawable(this.resources, R.drawable.arrow, null)
+        imageTypeLow = ResourcesCompat.getDrawable(this.resources, R.drawable.arrow, null)
         imageTypeHigh = ResourcesCompat.getDrawable(this.resources, R.drawable.high_priority, null)
     }
 }

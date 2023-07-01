@@ -1,4 +1,4 @@
-package com.way2mars.kotlin.todoapp.view
+package com.way2mars.kotlin.todoapp.adapter
 
 import android.text.SpannableString
 import android.text.style.StrikethroughSpan
@@ -11,10 +11,17 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.way2mars.kotlin.todoapp.R
 import com.way2mars.kotlin.todoapp.TodoApplication
-import com.way2mars.kotlin.todoapp.data.Importance
-import com.way2mars.kotlin.todoapp.data.TodoItem
-import com.way2mars.kotlin.todoapp.data.TodoItemsRepository
+import com.way2mars.kotlin.todoapp.model.Importance
+import com.way2mars.kotlin.todoapp.model.TodoItem
+import com.way2mars.kotlin.todoapp.model.TodoItemsRepository
 import com.way2mars.kotlin.todoapp.utils.toFormatString
+
+interface TodoItemActionListener{
+    fun onMarkDone(todoItem: TodoItem)
+    fun onGetInfo(todoItem: TodoItem)
+    fun onRemove(todoItem: TodoItem)
+}
+
 
 class TodoRecyclerAdapter : RecyclerView.Adapter<TodoRecyclerAdapter.TodoViewHolder>() {
 
@@ -37,13 +44,13 @@ class TodoRecyclerAdapter : RecyclerView.Adapter<TodoRecyclerAdapter.TodoViewHol
 
             when (item.importance) {
                 Importance.LOW -> {
-                    typeImage.visibility = View.GONE
+                    typeImage.visibility = View.VISIBLE
+                    typeImage.setImageDrawable(TodoApplication.imageTypeLow)
                     checkBox.buttonTintList = TodoApplication.colorStateListGreenLight
                 }
 
                 Importance.COMMON -> {
-                    typeImage.visibility = View.VISIBLE
-                    typeImage.setImageDrawable(TodoApplication.imageTypeCommon)
+                    typeImage.visibility = View.GONE
                     checkBox.buttonTintList = TodoApplication.colorStateListGreenLight
                 }
 

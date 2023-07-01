@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
+import com.way2mars.kotlin.todoapp.adapter.TodoRecyclerAdapter
 import com.way2mars.kotlin.todoapp.databinding.FragmentScrollingBinding
 
 
@@ -38,6 +39,7 @@ class ScrollingFragment : Fragment() {
         val recyclerView: RecyclerView = binding.todoRecyclerView
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = TodoRecyclerAdapter()
+
 
         // Eye button listener
 //        binding.isVisibleDoneTask.setOnClickListener {

@@ -1,4 +1,4 @@
-package com.way2mars.kotlin.todoapp.data
+package com.way2mars.kotlin.todoapp.model
 
 import com.way2mars.kotlin.todoapp.utils.toFormatString
 import com.way2mars.kotlin.todoapp.utils.toUnixTime
