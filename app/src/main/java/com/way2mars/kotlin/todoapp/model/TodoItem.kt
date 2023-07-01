@@ -38,7 +38,7 @@ data class TodoItem(
                 "deadline=${deadline?.toFormatString() ?: "отсутствует"} " +
                 "isCompleted=$isCompleted " +
                 "dateCreated=${dateCreated.toFormatString()} " +
-                "dateModified=${dateModified.toFormatString()}"
+                "dateModified=${dateModified?.toFormatString() ?: "n/a"}"
     }
 }
 

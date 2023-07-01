@@ -3,27 +3,28 @@ package com.way2mars.kotlin.todoapp.adapter
 import android.text.SpannableString
 import android.text.style.StrikethroughSpan
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.ImageView
+import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.way2mars.kotlin.todoapp.R
+import com.way2mars.kotlin.todoapp.R.*
 import com.way2mars.kotlin.todoapp.TodoApplication
 import com.way2mars.kotlin.todoapp.databinding.TodoItemViewBinding
 import com.way2mars.kotlin.todoapp.model.Importance
 import com.way2mars.kotlin.todoapp.model.TodoItem
-import com.way2mars.kotlin.todoapp.model.TodoItemsRepository
 import com.way2mars.kotlin.todoapp.utils.toFormatString
-import java.util.PrimitiveIterator
 
 interface TodoItemActionListener{
     fun onMarkDone(todoItem: TodoItem)
     fun onGetInfo(todoItem: TodoItem)
     fun onRemove(todoItem: TodoItem)
-    fun onUserMove(todoItem: TodoItem, moveBy: Int)
+    fun onTaskMove(todoItem: TodoItem, moveBy: Int)
 }
 
 
@@ -52,7 +53,7 @@ class TodoDiffCallback(
 
 class TodoRecyclerAdapter(private val todoItemActionListener: TodoItemActionListener ) : RecyclerView.Adapter<TodoRecyclerAdapter.TodoViewHolder>(), View.OnClickListener {
 
-    var container: List<TodoItem> = emptyList()
+    var tasks: List<TodoItem> = emptyList()
         set(newData){
             val diffCallback = TodoDiffCallback(field, newData)
             val diffResult = DiffUtil.calculateDiff(diffCallback, true)
@@ -61,10 +62,10 @@ class TodoRecyclerAdapter(private val todoItemActionListener: TodoItemActionList
         }
 
     inner class TodoViewHolder(val binding: TodoItemViewBinding) : RecyclerView.ViewHolder(binding.root) {
-        private val checkBox: CheckBox = itemView.findViewById(R.id.item_checkbox)
-        private val typeImage: ImageView = itemView.findViewById(R.id.item_type_img)
-        private val message: TextView = itemView.findViewById(R.id.item_message)
-        private val date: TextView = itemView.findViewById(R.id.item_date)
+        private val checkBox: CheckBox = itemView.findViewById(id.item_checkbox)
+        private val typeImage: ImageView = itemView.findViewById(id.item_type_img)
+        private val message: TextView = itemView.findViewById(id.item_message)
+        private val date: TextView = itemView.findViewById(id.item_date)
 
         fun bind(item: TodoItem) {
 
@@ -109,6 +110,13 @@ class TodoRecyclerAdapter(private val todoItemActionListener: TodoItemActionList
                 message.text = item.text
                 message.alpha = 1.0f
             }
+
+            // place item in all clickable views
+            with(this.binding) {
+                itemInfo.tag = item
+                checkBox.tag = item
+                itemView.tag = item
+            }
         }
     }
 
@@ -116,16 +124,73 @@ class TodoRecyclerAdapter(private val todoItemActionListener: TodoItemActionList
         val inflater = LayoutInflater.from(parent.context)
         val binding  = TodoItemViewBinding.inflate(inflater, parent, false)
 
+        binding.root.setOnClickListener(this)
+        binding.itemInfo.setOnClickListener(this)
+        binding.itemCheckbox.setOnClickListener(this)
+
         return TodoViewHolder(binding)
     }
 
-    override fun getItemCount(): Int = container.size
+    override fun getItemCount(): Int = tasks.size
 
     override fun onBindViewHolder(holder: TodoViewHolder, position: Int) {
-        holder.bind(container[position])
+        holder.bind(tasks[position])
     }
 
-    override fun onClick(p0: View?) {
-        Unit
+    override fun onClick(v: View) {
+        val task = v.tag as TodoItem
+
+        when(v.id){
+            id.item_info -> {
+                todoItemActionListener.onGetInfo(task)
+            }
+            id.item_checkbox -> {
+                todoItemActionListener.onMarkDone(task)
+            }
+            // click on a whole item
+            else -> {
+                showPopupMenu(v)
+            }
+        }
+    }
+
+    private fun showPopupMenu(view: View) {
+        val popupMenu = PopupMenu(view.context, view)
+        val context = view.context
+        val task = view.tag as TodoItem
+        val position = tasks.indexOfFirst { it.id == task.id }
+
+        popupMenu.menu.add(0, ID_MOVE_UP, Menu.NONE, context.getString(R.string.popup_menu_up))
+            .apply {
+                isEnabled = position > 0
+            }
+        popupMenu.menu.add(0, ID_MOVE_DOWN, Menu.NONE, context.getString(R.string.popup_menu_down))
+            .apply {
+                isEnabled = position < tasks.size - 1
+            }
+        popupMenu.menu.add(0, ID_REMOVE, Menu.NONE, context.getString(R.string.popup_menu_remove))
+
+        popupMenu.setOnMenuItemClickListener {
+            when(it.itemId){
+                ID_MOVE_UP -> {
+                    todoItemActionListener.onTaskMove(task, -1)
+                }
+                ID_MOVE_DOWN -> {
+                    todoItemActionListener.onTaskMove(task, 1)
+                }
+                ID_REMOVE -> {
+                    todoItemActionListener.onRemove(task)
+                }
+            }
+            return@setOnMenuItemClickListener true
+        }
+
+        popupMenu.show()
+    }
+
+    companion object{
+        private const val ID_MOVE_UP = 1
+        private const val ID_MOVE_DOWN = 2
+        private const val ID_REMOVE = 3
     }
 }

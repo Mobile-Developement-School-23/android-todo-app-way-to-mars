@@ -1,5 +1,6 @@
 package com.way2mars.kotlin.todoapp.model
 
+import com.way2mars.kotlin.todoapp.utils.TestException
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -31,6 +32,11 @@ class TodoItemsRepository {
 
     fun getItem(index: Int) = todoItems[index]
 
+    fun getById(id: String): TodoItem{
+        val task = todoItems.firstOrNull { it.id == id } ?: TestException()
+        return task as TodoItem
+    }
+
     fun markDone(todoItem: TodoItem?){
         if (todoItem == null) return
         val index = todoItems.indexOfFirst { it.id == todoItem.id }
@@ -56,6 +62,7 @@ class TodoItemsRepository {
         if (oldIndex == -1) return
 
         val newIndex = oldIndex + moveBy
+        todoItems = ArrayList(todoItems)
         Collections.swap(todoItems, oldIndex, newIndex)
         notifyChanges()
     }

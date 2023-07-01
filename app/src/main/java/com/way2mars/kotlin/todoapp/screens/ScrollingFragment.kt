@@ -1,6 +1,7 @@
 package com.way2mars.kotlin.todoapp.screens
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,7 +29,7 @@ class ScrollingFragment : Fragment() {
         get() = (activity?.applicationContext as TodoApplication).repository
 
     private val listener: TodoItemListener = { tasks: List<TodoItem> ->
-        adapter.container = tasks
+        adapter.tasks = tasks
     }
 
     override fun onCreateView(
@@ -39,6 +40,7 @@ class ScrollingFragment : Fragment() {
         binding = FragmentScrollingBinding.inflate(inflater, container, false)
         adapter = TodoRecyclerAdapter(object : TodoItemActionListener {
             override fun onMarkDone(todoItem: TodoItem) {
+                Log.d("TodoItemActionListener","onMarkDone")
                Snackbar.make(binding.root, "State checked", Snackbar.LENGTH_SHORT)
                    .also {
                        it.setTextColor(0xFF000000.toInt())
@@ -48,6 +50,7 @@ class ScrollingFragment : Fragment() {
 
             override fun onGetInfo(todoItem: TodoItem) {
                 Snackbar.make(binding.root, "Get Info", Snackbar.LENGTH_SHORT).show()
+                navigator().showDetails(todoItem)
             }
 
             override fun onRemove(todoItem: TodoItem) {
@@ -55,14 +58,14 @@ class ScrollingFragment : Fragment() {
                 viewModel.removeItem(todoItem)
             }
 
-            override fun onUserMove(todoItem: TodoItem, moveBy: Int) {
+            override fun onTaskMove(todoItem: TodoItem, moveBy: Int) {
                 viewModel.moveItem(todoItem, moveBy)
             }
 
         })
 
         viewModel.tasks.observe(viewLifecycleOwner, Observer {
-            adapter.container = it
+            adapter.tasks = it
         })
 
         val layoutManager = LinearLayoutManager(requireContext())

@@ -3,6 +3,7 @@ package com.way2mars.kotlin.todoapp.screens
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.way2mars.kotlin.todoapp.Navigator
 import com.way2mars.kotlin.todoapp.TodoApplication
 
 class ViewModelFactory(
@@ -13,6 +14,9 @@ class ViewModelFactory(
             ScrollingViewModel::class.java -> {
                 ScrollingViewModel(app.repository)
             }
+            TaskViewModel::class.java -> {
+                TaskViewModel(app.repository)
+            }
             else -> {
                 return super.create(modelClass)
             }
@@ -22,3 +26,5 @@ class ViewModelFactory(
 }
 
 fun Fragment.factory() = ViewModelFactory(requireContext().applicationContext as TodoApplication)
+
+fun Fragment.navigator() = requireActivity() as Navigator
