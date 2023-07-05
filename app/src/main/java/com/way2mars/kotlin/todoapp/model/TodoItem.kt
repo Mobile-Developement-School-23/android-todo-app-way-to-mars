@@ -2,6 +2,7 @@ package com.way2mars.kotlin.todoapp.model
 
 import com.way2mars.kotlin.todoapp.utils.toFormatString
 import com.way2mars.kotlin.todoapp.utils.toUnixTime
+import java.util.*
 import kotlin.random.Random
 
 /**
@@ -42,10 +43,11 @@ data class TodoItem(
     }
 }
 
-// fabric method to create a random TodoItem with a given id
-fun todoItemFromRandom(x: Int): TodoItem {
+// fabric method to create a random TodoItem
+fun todoItemFromRandom(): TodoItem {
     return TodoItem(
-        id = x.toString().padStart(12, '0'),
+       // id = x.toString().padStart(12, '0'),
+        id = UUID.randomUUID().toString(),
 
         text = when (Random.nextInt(0, 3)) {
             0 -> "Купить что-то"

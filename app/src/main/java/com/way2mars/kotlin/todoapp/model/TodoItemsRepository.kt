@@ -24,7 +24,7 @@ class TodoItemsRepository {
     private var listeners = mutableSetOf<TodoItemListener>()  // all the listeners
 
     // create 20 random TodoItems
-    init { for (i in 1..20) todoItems.add(todoItemFromRandom(i)) }
+    init { for (i in 1..20) todoItems.add(todoItemFromRandom()) }
 
     fun getAllTasks() = todoItems
 

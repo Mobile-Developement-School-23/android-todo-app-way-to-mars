@@ -111,7 +111,7 @@
                         android:textSize="16sp"/>
 
                 <TextView
-                        android:id="@+id/deadline_date"
+                        android:id="@+id/deadline_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
