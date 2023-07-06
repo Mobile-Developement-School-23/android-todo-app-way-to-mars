@@ -35,9 +35,10 @@
             app:layout_constraintTop_toTopOf="@id/close_button"/>
 
     <ScrollView android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:fillViewport="true"
-                app:layout_constraintTop_toBottomOf="@id/close_button">
+                app:layout_constraintTop_toBottomOf="@id/close_button"
+                app:layout_constraintBottom_toBottomOf="parent">
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -59,7 +60,8 @@
                     android:scrollHorizontally="false"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:text="11\n\n\n8647456\n\n\n\n\n\n565"/>
+                    tools:text="11\n\n\n8647456\n\n\n\n\n\n565" android:scrollbarAlwaysDrawVerticalTrack="false"
+                    android:scrollbarAlwaysDrawHorizontalTrack="false" android:nestedScrollingEnabled="false"/>
 
             <TextView
                     android:id="@+id/importance_title"
@@ -80,7 +82,9 @@
                     android:minWidth="0dp"
                     android:layout_marginStart="8dp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/importance_title"/>
+                    app:layout_constraintTop_toBottomOf="@id/importance_title"
+                    android:background="?attr/back_primary"
+                    android:minHeight="48dp"/>
 
             <View
                     android:id="@+id/first_line"
@@ -158,9 +162,8 @@
                     android:textSize="16sp"
                     android:textStyle="bold"
                     app:drawableLeftCompat="@drawable/delete"
-                    android:drawableTint="@color/color_light_gray"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/second_line"/>
+                    app:layout_constraintTop_toBottomOf="@id/second_line" app:drawableTint="@color/color_light_gray"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

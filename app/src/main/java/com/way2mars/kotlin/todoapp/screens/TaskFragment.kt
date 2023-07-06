@@ -11,12 +11,19 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.way2mars.kotlin.todoapp.databinding.CalendarBinding
 import com.way2mars.kotlin.todoapp.databinding.FragmentTaskBinding
+import com.way2mars.kotlin.todoapp.model.Importance
 import com.way2mars.kotlin.todoapp.utils.toFormatString
+import java.lang.RuntimeException
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+
 
 class TaskFragment : Fragment() {
 
     private lateinit var binding: FragmentTaskBinding
     private val viewModel: TaskViewModel by viewModels { factory() }
+
+    private  lateinit var spinnerAdapter: SpinnerAdapter
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,6 +53,12 @@ class TaskFragment : Fragment() {
 
         binding.deadlineSwitch.setOnClickListener { onDateSwitchPressed() }
 
+        spinnerAdapter = SpinnerAdapter(
+            listOf(Importance.LOW, Importance.COMMON, Importance.HIGH)
+        )  // .context
+
+        binding.importanceSpinner.adapter = spinnerAdapter
+
         return binding.root
     }
 
@@ -53,20 +66,32 @@ class TaskFragment : Fragment() {
         val dialogBinding = CalendarBinding.inflate(layoutInflater)
         var dateString: String? = null
         val dialog = AlertDialog.Builder(this.context)
-            .setTitle("Выберите дату")
             .setView(dialogBinding.root)
-            .setPositiveButton("Ок") { _, _ ->
+            .setNegativeButton("ОТМЕНА"){ a, b -> Unit}
+            .setPositiveButton("ГОТОВО") { _, _ ->
                 dateString?.let {
                     binding.deadlineText.text = it
                 }
             }
             .create()
         dialogBinding.calendar.setOnDateChangeListener { _, y, m, d ->
-            dateString = dateStringFromIntegers(
-                year = y,
-                month = m,
-                dayOfMonth = d
-            )
+            val date = LocalDate.of(y, m + 1, d)
+
+            val internal_formatter = DateTimeFormatter.ofPattern("E, MMMM yy")
+            val external_formatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
+
+            try {
+                dateString = date.format(external_formatter)
+            }
+            catch (e: RuntimeException){
+                e.printStackTrace()
+            }
+            dialogBinding.calendarTitleYear.text = y.toString()
+            try {
+                dialogBinding.calendarTitleDay.text = date.format(internal_formatter)
+            }catch (e: RuntimeException){
+                e.printStackTrace()
+            }
         }
         dialog.show()
     }
@@ -77,29 +102,10 @@ class TaskFragment : Fragment() {
 
         private const val TAG_USER_ID = "TAG_USER_ID"
 
-        private val months = listOf(
-            "января",
-            "февраля",
-            "марта",
-            "апреля",
-            "мая",
-            "июня",
-            "июля",
-            "августа",
-            "сентября",
-            "октября",
-            "ноября",
-            "декабря"
-        )
-
         fun newInstance(userId: String): TaskFragment {
             val fragment = TaskFragment()
             fragment.arguments = bundleOf(TAG_USER_ID to userId)
             return fragment
-        }
-
-        fun dateStringFromIntegers(year: Int, month: Int, dayOfMonth: Int): String {
-            return "$dayOfMonth ${months[month]} $year"
         }
 
     }

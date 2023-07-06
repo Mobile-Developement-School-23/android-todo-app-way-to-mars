@@ -1,10 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                                   android:layout_width="match_parent"
-                                                   android:layout_height="match_parent">
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+ <TextView
+         android:id="@+id/calendar_title_year"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:background="?attr/color_blue"
+         android:textSize="@dimen/text_size_title"
+         android:textColor="?attr/color_white"
+         android:paddingHorizontal="20dp"
+         android:paddingTop="10dp"
+         android:text="2021"/>
+ <TextView
+         android:id="@+id/calendar_title_day"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:background="?attr/color_blue"
+         android:textSize="@dimen/text_size_large_title"
+         android:textColor="?attr/color_white"
+         android:paddingHorizontal="20dp"
+         android:paddingVertical="14dp"
+         android:text="Пт, Июнь 12"/>
  <CalendarView
          android:id="@+id/calendar"
-         android:layout_width="wrap_content"
+         android:layout_width="match_parent"
          android:layout_height="wrap_content">
  </CalendarView>
-</FrameLayout>
+</LinearLayout>

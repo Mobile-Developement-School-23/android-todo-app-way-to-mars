@@ -21,6 +21,13 @@ class TodoApplication : Application() {
             private set
         var imageTypeHigh: Drawable? = null
             private set
+
+        var iconImportanceLow: Drawable? = null
+            private set
+        var iconImportanceCommon: Drawable? = null
+        private set
+        var iconImportanceHigh: Drawable? = null
+            private set
     }
 
     override fun onCreate() {
@@ -38,6 +45,10 @@ class TodoApplication : Application() {
         colorStateListRed = ColorStateList.valueOf(this.resources.getColor(R.color.red, null))
         imageTypeLow = ResourcesCompat.getDrawable(this.resources, R.drawable.arrow, null)
         imageTypeHigh = ResourcesCompat.getDrawable(this.resources, R.drawable.high_priority, null)
+
+        iconImportanceLow = ResourcesCompat.getDrawable(this.resources, R.drawable.priority_low, null)
+        iconImportanceCommon = ResourcesCompat.getDrawable(this.resources, R.drawable.priority_common, null)
+        iconImportanceHigh = ResourcesCompat.getDrawable(this.resources, R.drawable.priority_high, null)
     }
 }
 
