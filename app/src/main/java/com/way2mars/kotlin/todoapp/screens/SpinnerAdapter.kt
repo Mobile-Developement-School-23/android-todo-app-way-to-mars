@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import androidx.core.content.ContextCompat
 import com.way2mars.kotlin.todoapp.TodoApplication
 import com.way2mars.kotlin.todoapp.databinding.SpinnerItemBinding
 import com.way2mars.kotlin.todoapp.model.Importance
