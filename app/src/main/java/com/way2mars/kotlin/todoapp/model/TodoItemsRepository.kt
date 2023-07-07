@@ -2,7 +2,6 @@ package com.way2mars.kotlin.todoapp.model
 
 import com.way2mars.kotlin.todoapp.utils.TestException
 import java.util.*
-import kotlin.collections.ArrayList
 
 /**
  * The repository of Todo_Items as StateFlow Repository
@@ -28,7 +27,9 @@ class TodoItemsRepository {
     private var listeners = mutableSetOf<TodoItemListener>()  // all the listeners
 
     // create 20 random TodoItems
-    init { for (i in 1..20) unfilteredItems.add(todoItemFromRandom()) }
+    init {
+        for (i in 1..20) unfilteredItems.add(todoItemFromRandom())
+    }
 
 //    fun getAllTasks() = todoItems
 //
@@ -36,17 +37,19 @@ class TodoItemsRepository {
 //
 //    fun getItem(index: Int) = todoItems[index]
 
-    fun getById(id: String): TodoItem{
+    fun getDoneCount(): Int = unfilteredItems.filter { it.isCompleted }.size
+
+    fun getById(id: String): TodoItem {
         val task = filteredItems.firstOrNull { it.id == id } ?: TestException()
         return task as TodoItem
     }
 
-    fun setFilter(flag: Boolean){
+    fun setFilter(flag: Boolean) {
         filter = flag
         notifyChanges()
     }
 
-    fun markDone(todoItem: TodoItem?){
+    fun markDone(todoItem: TodoItem?) {
         if (todoItem == null) return
         val index = unfilteredItems.indexOfFirst { it.id == todoItem.id }
         if (index == -1) return  // do nothing if there's no such a task
@@ -66,7 +69,7 @@ class TodoItemsRepository {
         notifyChanges()
     }
 
-    fun moveItem(todoItem: TodoItem, moveBy: Int){
+    fun moveItem(todoItem: TodoItem, moveBy: Int) {
         val oldIndex = unfilteredItems.indexOfFirst { it.id == todoItem.id }
         if (oldIndex == -1) return
 
@@ -76,12 +79,12 @@ class TodoItemsRepository {
         notifyChanges()
     }
 
-    fun addListener(listener: TodoItemListener){
+    fun addListener(listener: TodoItemListener) {
         listeners.add(listener)
         listener.invoke(filteredItems)
     }
 
-    fun removeListener(listener: TodoItemListener){
+    fun removeListener(listener: TodoItemListener) {
         listeners.remove(listener)
         listener.invoke(filteredItems)
     }

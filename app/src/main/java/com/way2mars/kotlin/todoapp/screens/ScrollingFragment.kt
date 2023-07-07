@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
+import com.way2mars.kotlin.todoapp.R
 import com.way2mars.kotlin.todoapp.TodoApplication
 import com.way2mars.kotlin.todoapp.adapter.TodoItemActionListener
 import com.way2mars.kotlin.todoapp.adapter.TodoRecyclerAdapter
@@ -61,6 +62,7 @@ class ScrollingFragment : Fragment() {
 
         viewModel.tasks.observe(viewLifecycleOwner, Observer {
             adapter.tasks = it
+            binding.textCountDone.text = getString(R.string.tasks_done, viewModel.countDone)
         })
 
         val layoutManager = LinearLayoutManager(requireContext())
