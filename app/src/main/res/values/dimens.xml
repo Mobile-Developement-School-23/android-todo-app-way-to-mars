@@ -2,4 +2,7 @@
     <dimen name="text_margin">16dp</dimen>
     <dimen name="text_size_large_title">32sp</dimen>
     <dimen name="text_size_title">24sp</dimen>
+    <dimen name="collapsing_toolbar_padding_bottom">18dp</dimen>
+    <dimen name="collapsing_toolbar_padding_start">18dp</dimen>
+    <dimen name="collapsing_toolbar_title_padding_bottom">64sp</dimen>
 </resources>

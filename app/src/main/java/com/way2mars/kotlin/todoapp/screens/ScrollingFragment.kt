@@ -17,6 +17,7 @@ import com.way2mars.kotlin.todoapp.databinding.FragmentScrollingBinding
 import com.way2mars.kotlin.todoapp.model.TodoItem
 import com.way2mars.kotlin.todoapp.model.TodoItemListener
 import com.way2mars.kotlin.todoapp.model.TodoItemsRepository
+import kotlin.random.Random
 
 
 class ScrollingFragment : Fragment() {
@@ -40,17 +41,12 @@ class ScrollingFragment : Fragment() {
         binding = FragmentScrollingBinding.inflate(inflater, container, false)
         adapter = TodoRecyclerAdapter(object : TodoItemActionListener {
             override fun onMarkDone(todoItem: TodoItem) {
-                Log.d("TodoItemActionListener","onMarkDone")
-               Snackbar.make(binding.root, "State checked", Snackbar.LENGTH_SHORT)
-                   .also {
-                       it.setTextColor(0xFF000000.toInt())
-                       it.show()
-                   }
+                viewModel.markDone(todoItem)
             }
 
             override fun onGetInfo(todoItem: TodoItem) {
                 Snackbar.make(binding.root, "Get Info", Snackbar.LENGTH_SHORT).show()
-                navigator().showDetails(todoItem)
+                contract().showDetailsScreen(todoItem)
             }
 
             override fun onRemove(todoItem: TodoItem) {
@@ -61,7 +57,6 @@ class ScrollingFragment : Fragment() {
             override fun onTaskMove(todoItem: TodoItem, moveBy: Int) {
                 viewModel.moveItem(todoItem, moveBy)
             }
-
         })
 
         viewModel.tasks.observe(viewLifecycleOwner, Observer {
@@ -77,6 +72,12 @@ class ScrollingFragment : Fragment() {
         binding.fab.setOnClickListener {
             Snackbar.make(binding.root, "Add new task", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
+        }
+
+        binding.eyeButton.setOnClickListener {
+            Snackbar.make(binding.root, "Eye button", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show()
+            viewModel.setFilter(binding.eyeButton.isChecked)
         }
 
         return binding.root

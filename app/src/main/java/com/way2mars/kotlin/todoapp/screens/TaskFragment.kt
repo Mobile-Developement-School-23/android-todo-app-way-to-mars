@@ -48,7 +48,7 @@ class TaskFragment : Fragment() {
             // probably we should check the element
             viewModel.removeTask()
             // leave TaskFragment
-            navigator().goBack()
+            contract().goBack()
         }
 
         binding.deadlineSwitch.setOnClickListener { onDateSwitchPressed() }
@@ -67,7 +67,7 @@ class TaskFragment : Fragment() {
         var dateString: String? = null
         val dialog = AlertDialog.Builder(this.context)
             .setView(dialogBinding.root)
-            .setNegativeButton("ОТМЕНА"){ a, b -> Unit}
+            .setNegativeButton("ОТМЕНА"){ _, _ -> Unit}
             .setPositiveButton("ГОТОВО") { _, _ ->
                 dateString?.let {
                     binding.deadlineText.text = it

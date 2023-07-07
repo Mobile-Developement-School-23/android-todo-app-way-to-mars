@@ -39,4 +39,12 @@ class ScrollingViewModel(
         repository.removeItem(task)
     }
 
+    fun markDone(task: TodoItem){
+        repository.markDone(task)
+    }
+
+    fun setFilter(flag: Boolean){
+        repository.setFilter(flag)
+    }
+
 }

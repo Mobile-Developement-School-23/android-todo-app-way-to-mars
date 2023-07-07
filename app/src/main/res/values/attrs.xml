@@ -15,8 +15,4 @@
     <attr name="color_blue" format="color|reference"/>
     <attr name="color_gray" format="color|reference"/>
     <attr name="color_gray_light" format="color|reference"/>
-
-    <attr name="collapsing_toolbar_padding_bottom" format="dimension" />
-    <attr name="collapsing_toolbar_padding_start" format="dimension" />
-    <attr name="collapsing_toolbar_title_padding_bottom" format="dimension" />
 </resources>

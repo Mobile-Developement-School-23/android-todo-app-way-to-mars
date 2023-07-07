@@ -26,8 +26,8 @@
                 app:layout_scrollFlags="scroll|exitUntilCollapsed"
                 app:contentScrim="@android:color/transparent"
                 app:title="@string/main_title"
-                app:expandedTitleMarginStart="?attr/collapsing_toolbar_padding_start"
-                app:expandedTitleMarginBottom="?attr/collapsing_toolbar_title_padding_bottom">
+                app:expandedTitleMarginStart="@dimen/collapsing_toolbar_padding_start"
+                app:expandedTitleMarginBottom="@dimen/collapsing_toolbar_title_padding_bottom">
 
             <androidx.appcompat.widget.Toolbar
                     android:id="@+id/main_fragment_toolbar"
@@ -44,19 +44,21 @@
                     android:text="@string/tasks_done"
                     tools:text="@string/tasks_done"
                     android:textSize="16sp"
-                    android:layout_marginStart="?attr/collapsing_toolbar_padding_start"
-                    android:layout_marginBottom="?attr/collapsing_toolbar_padding_bottom"
+                    android:layout_marginStart="@dimen/collapsing_toolbar_padding_start"
+                    android:layout_marginBottom="@dimen/collapsing_toolbar_padding_bottom"
                     android:fitsSystemWindows="true"
                     android:layout_gravity="start|bottom"
                     app:layout_collapseMode="parallax"/>
 
-            <ImageView
+            <CheckBox
+                    android:id="@+id/eye_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/visibility"
+                    android:button="@drawable/src_is_visibility"
+                    android:buttonTint="?attr/color_blue"
                     android:fitsSystemWindows="true"
                     android:layout_gravity="end|bottom"
-                    android:layout_marginBottom="?attr/collapsing_toolbar_padding_bottom"
+                    android:layout_marginBottom="0dp"
                     android:layout_marginEnd="16dp"
                     app:layout_collapseMode="pin"/>
 

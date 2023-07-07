@@ -6,10 +6,11 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
 import com.way2mars.kotlin.todoapp.databinding.ActivityMainBinding
 import com.way2mars.kotlin.todoapp.model.TodoItem
+import com.way2mars.kotlin.todoapp.model.TodoItemsRepository
 import com.way2mars.kotlin.todoapp.screens.ScrollingFragment
 import com.way2mars.kotlin.todoapp.screens.TaskFragment
 
-class MainActivity : AppCompatActivity(), Navigator {
+class MainActivity : AppCompatActivity(), AppContract {
 
     private lateinit var binding: ActivityMainBinding
     private val currentFragment: Fragment  // returns actual fragment in a container
@@ -27,7 +28,7 @@ class MainActivity : AppCompatActivity(), Navigator {
                 .commit()
     }
 
-    override fun showDetails(todoItem: TodoItem) {
+    override fun showDetailsScreen(todoItem: TodoItem) {
         supportFragmentManager.beginTransaction()
             .addToBackStack(null)
             .replace(R.id.main_fragment_container_view, TaskFragment.newInstance(todoItem.id))

@@ -27,8 +27,5 @@
         <item name="back_secondary">@color/back_light_secondary</item>
         <item name="back_elevated">@color/back_light_elevated</item>
 
-        <item name="collapsing_toolbar_padding_bottom">20dp</item>
-        <item name="collapsing_toolbar_padding_start">48dp</item>
-        <item name="collapsing_toolbar_title_padding_bottom">64dp</item>
     </style>
 </resources>

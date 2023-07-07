@@ -1,10 +1,11 @@
 package com.way2mars.kotlin.todoapp
 
 import com.way2mars.kotlin.todoapp.model.TodoItem
+import com.way2mars.kotlin.todoapp.model.TodoItemsRepository
 
-interface Navigator {
+interface AppContract {
 
-    fun showDetails(todoItem: TodoItem)
+    fun showDetailsScreen(todoItem: TodoItem)
     fun goBack()
     fun toast(messageRes: Int)
 
