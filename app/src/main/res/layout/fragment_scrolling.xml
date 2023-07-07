@@ -73,7 +73,7 @@
             android:layout_margin="10dp"
             android:background="@drawable/bg_todo_recycler_view"
             android:elevation="4dp"
-            tools:listitem="@layout/todo_item_view"
+            tools:listitem="@layout/view_todo_item"
             tools:itemCount="20"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

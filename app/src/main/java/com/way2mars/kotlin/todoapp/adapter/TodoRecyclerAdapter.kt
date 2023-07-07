@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.way2mars.kotlin.todoapp.R
 import com.way2mars.kotlin.todoapp.R.*
 import com.way2mars.kotlin.todoapp.TodoApplication
-import com.way2mars.kotlin.todoapp.databinding.TodoItemViewBinding
+import com.way2mars.kotlin.todoapp.databinding.ViewTodoItemBinding
 import com.way2mars.kotlin.todoapp.model.Importance
 import com.way2mars.kotlin.todoapp.model.TodoItem
 import com.way2mars.kotlin.todoapp.utils.toFormatString
@@ -61,7 +61,7 @@ class TodoRecyclerAdapter(private val todoItemActionListener: TodoItemActionList
             diffResult.dispatchUpdatesTo(this)
         }
 
-    inner class TodoViewHolder(val binding: TodoItemViewBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class TodoViewHolder(val binding: ViewTodoItemBinding) : RecyclerView.ViewHolder(binding.root) {
         private val checkBox: CheckBox = itemView.findViewById(id.item_checkbox)
         private val typeImage: ImageView = itemView.findViewById(id.item_type_img)
         private val message: TextView = itemView.findViewById(id.item_message)
@@ -122,7 +122,7 @@ class TodoRecyclerAdapter(private val todoItemActionListener: TodoItemActionList
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val binding  = TodoItemViewBinding.inflate(inflater, parent, false)
+        val binding  = ViewTodoItemBinding.inflate(inflater, parent, false)
 
         binding.root.setOnClickListener(this)
         binding.itemInfo.setOnClickListener(this)

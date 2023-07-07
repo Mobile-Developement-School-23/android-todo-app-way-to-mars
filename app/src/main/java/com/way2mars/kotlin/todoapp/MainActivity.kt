@@ -2,6 +2,7 @@ package com.way2mars.kotlin.todoapp
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
 import com.way2mars.kotlin.todoapp.databinding.ActivityMainBinding
 import com.way2mars.kotlin.todoapp.model.TodoItem
@@ -11,6 +12,8 @@ import com.way2mars.kotlin.todoapp.screens.TaskFragment
 class MainActivity : AppCompatActivity(), Navigator {
 
     private lateinit var binding: ActivityMainBinding
+    private val currentFragment: Fragment  // returns actual fragment in a container
+        get() = supportFragmentManager.findFragmentById(R.id.main_fragment_container_view)!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
