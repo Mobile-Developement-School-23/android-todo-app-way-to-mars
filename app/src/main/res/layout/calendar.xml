@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -13,7 +14,7 @@
          android:textColor="?attr/color_white"
          android:paddingHorizontal="20dp"
          android:paddingTop="10dp"
-         android:text="2021"/>
+         tools:text="2021"/>
  <TextView
          android:id="@+id/calendar_title_day"
          android:layout_width="match_parent"
@@ -23,7 +24,7 @@
          android:textColor="?attr/color_white"
          android:paddingHorizontal="20dp"
          android:paddingVertical="14dp"
-         android:text="Пт, Июнь 12"/>
+         tools:text="Пт, Июнь 12"/>
  <CalendarView
          android:id="@+id/calendar"
          android:layout_width="match_parent"

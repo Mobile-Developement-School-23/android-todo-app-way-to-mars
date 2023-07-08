@@ -13,6 +13,7 @@ import com.way2mars.kotlin.todoapp.databinding.CalendarBinding
 import com.way2mars.kotlin.todoapp.databinding.FragmentTaskBinding
 import com.way2mars.kotlin.todoapp.model.Importance
 import com.way2mars.kotlin.todoapp.utils.toFormatString
+import com.way2mars.kotlin.todoapp.utils.toUnixTime
 import java.lang.RuntimeException
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -24,7 +25,6 @@ class TaskFragment : Fragment() {
     private val viewModel: TaskViewModel by viewModels { factory() }
 
     private  lateinit var spinnerAdapter: SpinnerAdapter
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,61 +38,84 @@ class TaskFragment : Fragment() {
     ): View {
         binding = FragmentTaskBinding.inflate(layoutInflater, container, false)
 
-        viewModel.task.observe(viewLifecycleOwner, Observer {
-            binding.editTextTask.setText(it.text)  // .text = myString.toEditable()
-            binding.deadlineText.text = it.deadline.toFormatString()
+        with(binding) {
+            viewModel.task.observe(viewLifecycleOwner, Observer {
+                editTextTask.setText(it.text)
+                deadlineText.text = it.deadline.toFormatString()
+            })
 
-        })
+            deleteButton.setOnClickListener {
+                // probably we should check the element
+                viewModel.removeTask()
+                contract().goBack()
+            }
 
-        binding.deleteButton.setOnClickListener {
-            // probably we should check the element
-            viewModel.removeTask()
-            // leave TaskFragment
-            contract().goBack()
+            deadlineSwitch.setOnCheckedChangeListener { compoundButton, isChecked ->
+                if (isChecked) {
+                    calendarDialog(fromSwitch = true)
+                    deadlineText.visibility = View.VISIBLE
+                } else {
+                    deadlineText.visibility = View.INVISIBLE
+                }
+            }
+
+            deadlineText.setOnClickListener { calendarDialog(fromSwitch = false) }
+
+            spinnerAdapter = SpinnerAdapter(
+                listOf(Importance.LOW, Importance.COMMON, Importance.HIGH)
+            )  // .context
+
+            importanceSpinner.adapter = spinnerAdapter
         }
-
-        binding.deadlineSwitch.setOnClickListener { onDateSwitchPressed() }
-
-        spinnerAdapter = SpinnerAdapter(
-            listOf(Importance.LOW, Importance.COMMON, Importance.HIGH)
-        )  // .context
-
-        binding.importanceSpinner.adapter = spinnerAdapter
-
         return binding.root
     }
 
-    private fun onDateSwitchPressed() {
+    private fun calendarDialog(fromSwitch: Boolean) {
         val dialogBinding = CalendarBinding.inflate(layoutInflater)
         var dateString: String? = null
+
+        val titleFiller = { date: LocalDate ->
+            val internalFormatter = DateTimeFormatter.ofPattern("E, MMMM d")
+            val externalFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
+            try {
+                dateString = date.format(externalFormatter)
+            }
+            catch (e: RuntimeException){
+                e.printStackTrace()
+            }
+            dialogBinding.calendarTitleYear.text = date.year.toString()
+            try {
+                dialogBinding.calendarTitleDay.text = date.format(internalFormatter)
+            }catch (e: RuntimeException){
+                dialogBinding.calendarTitleDay.text = "n/a"
+                e.printStackTrace()
+            }
+        }
+
         val dialog = AlertDialog.Builder(this.context)
             .setView(dialogBinding.root)
-            .setNegativeButton("ОТМЕНА"){ _, _ -> Unit}
+            .setNegativeButton("ОТМЕНА"){ dialog, which ->
+                if (fromSwitch) binding.deadlineSwitch.isChecked = false
+            }
             .setPositiveButton("ГОТОВО") { _, _ ->
                 dateString?.let {
                     binding.deadlineText.text = it
                 }
             }
+            .setOnCancelListener {
+                if (fromSwitch) binding.deadlineSwitch.isChecked = false
+            }
             .create()
         dialogBinding.calendar.setOnDateChangeListener { _, y, m, d ->
-            val date = LocalDate.of(y, m + 1, d)
+            titleFiller(LocalDate.of(y, m + 1, d))
+           }
 
-            val internal_formatter = DateTimeFormatter.ofPattern("E, MMMM yy")
-            val external_formatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
+        val initialDate = binding.deadlineText.text.toString().toUnixTime()
+            .let { if (it == 0L) System.currentTimeMillis() else it }
 
-            try {
-                dateString = date.format(external_formatter)
-            }
-            catch (e: RuntimeException){
-                e.printStackTrace()
-            }
-            dialogBinding.calendarTitleYear.text = y.toString()
-            try {
-                dialogBinding.calendarTitleDay.text = date.format(internal_formatter)
-            }catch (e: RuntimeException){
-                e.printStackTrace()
-            }
-        }
+        dialogBinding.calendar.setDate(initialDate, true, true)
+        titleFiller(LocalDate.ofEpochDay(dialogBinding.calendar.date / (24*60*60*1000) + 1))
+
         dialog.show()
     }
 

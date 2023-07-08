@@ -8,5 +8,6 @@ interface AppContract {
     fun showDetailsScreen(todoItem: TodoItem)
     fun goBack()
     fun toast(messageRes: Int)
-
+    fun saveItem()
+    fun deleteItem()
 }

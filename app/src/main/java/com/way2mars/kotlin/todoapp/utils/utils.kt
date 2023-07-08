@@ -5,15 +5,30 @@ import java.util.*
 
 // converts UNIX-time to a string
 fun Long?.toFormatString(): String {
-    val date = Date(this ?: 0)
-    return SimpleDateFormat("d MMM yyyy", Locale("ru")).format(date)
+    this ?: return ""
+    val date = Date(this)
+    return SimpleDateFormat("d MMMM yyyy", Locale.getDefault()).format(date)
 }
 
 // converts a string to UNIX-time (e.g. "22-06-2007")
 fun String?.toUnixTime(): Long {
-    if (this == null) return 0
-    val date = SimpleDateFormat("dd-MM-yyyy", Locale("ru")).parse(this) ?: return 0
-    return date.time
+    this ?: return 0
+    var date: Date? = null
+    try {
+        date = SimpleDateFormat("d MMMM yyyy", Locale.getDefault()).parse(this) ?: return 0
+    }
+    catch (e: Exception){
+        e.printStackTrace()
+    }
+    if (date == null) {
+        try {
+            date = SimpleDateFormat("d-MM-yyyy", Locale.getDefault()).parse(this) ?: return 0
+        }
+        catch (e: Exception){
+            e.printStackTrace()
+        }
+    }
+    return date?.time ?: 0
 }
 
 

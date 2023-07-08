@@ -2,11 +2,11 @@ package com.way2mars.kotlin.todoapp
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
 import com.way2mars.kotlin.todoapp.databinding.ActivityMainBinding
 import com.way2mars.kotlin.todoapp.model.TodoItem
-import com.way2mars.kotlin.todoapp.model.TodoItemsRepository
 import com.way2mars.kotlin.todoapp.screens.ScrollingFragment
 import com.way2mars.kotlin.todoapp.screens.TaskFragment
 
@@ -40,8 +40,16 @@ class MainActivity : AppCompatActivity(), AppContract {
         onBackPressedDispatcher.onBackPressed()
     }
 
-    override fun toast(messageRes: Int) {
+    override fun toast(@StringRes messageRes: Int) {
         Snackbar.make(binding.root, messageRes, Snackbar.LENGTH_SHORT).show()
+    }
+
+    override fun saveItem() {
+        TODO("Not yet implemented")
+    }
+
+    override fun deleteItem() {
+        TODO("Not yet implemented")
     }
 
 
