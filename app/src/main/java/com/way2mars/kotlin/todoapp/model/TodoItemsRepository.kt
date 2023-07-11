@@ -40,6 +40,7 @@ class TodoItemsRepository {
     fun getDoneCount(): Int = unfilteredItems.filter { it.isCompleted }.size
 
     fun getById(id: String): TodoItem {
+        if (id == "") return newTask()
         val task = filteredItems.firstOrNull { it.id == id } ?: TestException()
         return task as TodoItem
     }

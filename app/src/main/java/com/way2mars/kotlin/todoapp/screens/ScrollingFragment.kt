@@ -18,7 +18,7 @@ import com.way2mars.kotlin.todoapp.databinding.FragmentScrollingBinding
 import com.way2mars.kotlin.todoapp.model.TodoItem
 import com.way2mars.kotlin.todoapp.model.TodoItemListener
 import com.way2mars.kotlin.todoapp.model.TodoItemsRepository
-import kotlin.random.Random
+import kotlin.properties.Delegates
 
 
 class ScrollingFragment : Fragment() {
@@ -27,11 +27,17 @@ class ScrollingFragment : Fragment() {
     private lateinit var adapter: TodoRecyclerAdapter
 
     private val viewModel: ScrollingViewModel by viewModels { factory() }
-    private val todoItemsRepository: TodoItemsRepository
-        get() = (activity?.applicationContext as TodoApplication).repository
+//    private val todoItemsRepository: TodoItemsRepository
+//        get() = (activity?.applicationContext as TodoApplication).repository
+//
+//    private val listener: TodoItemListener = { tasks: List<TodoItem> ->
+//        adapter.tasks = tasks
+//    }
+    private var eyeState by Delegates.notNull<Boolean>()
 
-    private val listener: TodoItemListener = { tasks: List<TodoItem> ->
-        adapter.tasks = tasks
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        eyeState = savedInstanceState?.getBoolean(KEY_EYE_BUTTON_STATE) ?: true
     }
 
     override fun onCreateView(
@@ -46,7 +52,7 @@ class ScrollingFragment : Fragment() {
             }
 
             override fun onGetInfo(todoItem: TodoItem) {
-                Snackbar.make(binding.root, "Get Info", Snackbar.LENGTH_SHORT).show()
+                Log.d(TAG, "OnGetInfo")
                 contract().showDetailsScreen(todoItem)
             }
 
@@ -72,20 +78,35 @@ class ScrollingFragment : Fragment() {
 
         // FAB listener
         binding.fab.setOnClickListener {
-            Snackbar.make(binding.root, "Add new task", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
+            Log.d(TAG, "FAB onClick")
+            contract().createNewTask()
         }
 
-        binding.eyeButton.setOnClickListener {
+        binding.eyeButton.setOnCheckedChangeListener{ view, isChecked ->
             Snackbar.make(binding.root, "Eye button", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
-            viewModel.setFilter(binding.eyeButton.isChecked)
+            viewModel.setFilter(isChecked)
+            eyeState = isChecked
         }
+        binding.eyeButton.isChecked = eyeState
 
         return binding.root
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean(KEY_EYE_BUTTON_STATE, eyeState)
+        Log.d(TAG, "onSaveInstanceState")
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
+        Log.d(TAG, "onDestroyView")
+    }
+
+    companion object{
+        private const val KEY_EYE_BUTTON_STATE = "KEY_EYE_BUTTON_STATE"
+
+        @JvmStatic private val TAG = ScrollingFragment::class.java.simpleName
     }
 }

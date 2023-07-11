@@ -35,6 +35,13 @@ class MainActivity : AppCompatActivity(), AppContract {
             .commit()
     }
 
+    override fun createNewTask() {
+        supportFragmentManager.beginTransaction()
+            .addToBackStack(null)
+            .replace(R.id.main_fragment_container_view, TaskFragment.newInstance(""))  // void string - new task
+            .commit()
+    }
+
     override fun goBack() {
         //onBackPressed()
         onBackPressedDispatcher.onBackPressed()

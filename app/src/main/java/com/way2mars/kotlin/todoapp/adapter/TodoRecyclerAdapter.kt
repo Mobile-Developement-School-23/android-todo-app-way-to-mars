@@ -2,6 +2,7 @@ package com.way2mars.kotlin.todoapp.adapter
 
 import android.text.SpannableString
 import android.text.style.StrikethroughSpan
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
@@ -51,7 +52,8 @@ class TodoDiffCallback(
 }
 
 
-class TodoRecyclerAdapter(private val todoItemActionListener: TodoItemActionListener ) : RecyclerView.Adapter<TodoRecyclerAdapter.TodoViewHolder>(), View.OnClickListener {
+class TodoRecyclerAdapter(private val todoItemActionListener: TodoItemActionListener )
+    : RecyclerView.Adapter<TodoRecyclerAdapter.TodoViewHolder>(), View.OnClickListener, View.OnLongClickListener {
 
     var tasks: List<TodoItem> = emptyList()
         set(newData){
@@ -124,7 +126,7 @@ class TodoRecyclerAdapter(private val todoItemActionListener: TodoItemActionList
         val inflater = LayoutInflater.from(parent.context)
         val binding  = ViewTodoItemBinding.inflate(inflater, parent, false)
 
-        binding.root.setOnClickListener(this)
+        binding.root.setOnLongClickListener(this)
         binding.itemInfo.setOnClickListener(this)
         binding.itemCheckbox.setOnClickListener(this)
 
@@ -147,12 +149,19 @@ class TodoRecyclerAdapter(private val todoItemActionListener: TodoItemActionList
             id.item_checkbox -> {
                 todoItemActionListener.onMarkDone(task)
             }
-            // click on a whole item
-            else -> {
-                showPopupMenu(v)
-            }
         }
     }
+
+    override fun onLongClick(v: View): Boolean {
+        Log.d("111","Long click")
+        when(v.id){
+            id.item_info -> return false
+            id.item_checkbox -> return false
+            else -> showPopupMenu(v)
+        }
+        return true
+    }
+
 
     private fun showPopupMenu(view: View) {
         val popupMenu = PopupMenu(view.context, view)
@@ -193,4 +202,6 @@ class TodoRecyclerAdapter(private val todoItemActionListener: TodoItemActionList
         private const val ID_MOVE_DOWN = 2
         private const val ID_REMOVE = 3
     }
+
+
 }

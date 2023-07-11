@@ -6,6 +6,7 @@
         android:layout_height="wrap_content" xmlns:app="http://schemas.android.com/apk/res-auto"
         android:orientation="horizontal"
         android:paddingVertical="10dp"
+        android:id="@+id/todo_item_view"
         android:background="?android:attr/selectableItemBackground"
         app:layout_constraintHorizontal_chainStyle="spread_inside">
 

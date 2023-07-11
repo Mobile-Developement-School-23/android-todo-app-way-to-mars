@@ -73,3 +73,15 @@ fun todoItemFromRandom(): TodoItem {
         dateModified = "18-06-2023".toUnixTime()
     )
 }
+
+fun newTask(): TodoItem{
+    return TodoItem(
+        id = UUID.randomUUID().toString(),
+        text = "",
+        importance = Importance.COMMON,
+        deadline = null,
+        isCompleted = false,
+        dateCreated = System.currentTimeMillis(),
+        dateModified = null
+    )
+}
