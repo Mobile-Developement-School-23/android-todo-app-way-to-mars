@@ -9,6 +9,8 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import com.google.android.material.snackbar.Snackbar
+import com.way2mars.kotlin.todoapp.R
 import com.way2mars.kotlin.todoapp.databinding.CalendarBinding
 import com.way2mars.kotlin.todoapp.databinding.FragmentTaskBinding
 import com.way2mars.kotlin.todoapp.model.Importance
@@ -24,7 +26,7 @@ class TaskFragment : Fragment() {
     private lateinit var binding: FragmentTaskBinding
     private val viewModel: TaskViewModel by viewModels { factory() }
 
-    private  lateinit var spinnerAdapter: SpinnerAdapter
+    private lateinit var spinnerAdapter: SpinnerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,6 +68,9 @@ class TaskFragment : Fragment() {
             )  // .context
 
             importanceSpinner.adapter = spinnerAdapter
+
+            // Paints delete button gray if .id is empty or makes it red and clickable
+            setDeleteState((viewModel.task.value?.id?.length ?: 0) != 0)
         }
         return binding.root
     }
@@ -79,14 +84,13 @@ class TaskFragment : Fragment() {
             val externalFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
             try {
                 dateString = date.format(externalFormatter)
-            }
-            catch (e: RuntimeException){
+            } catch (e: RuntimeException) {
                 e.printStackTrace()
             }
             dialogBinding.calendarTitleYear.text = date.year.toString()
             try {
                 dialogBinding.calendarTitleDay.text = date.format(internalFormatter)
-            }catch (e: RuntimeException){
+            } catch (e: RuntimeException) {
                 dialogBinding.calendarTitleDay.text = "n/a"
                 e.printStackTrace()
             }
@@ -94,7 +98,7 @@ class TaskFragment : Fragment() {
 
         val dialog = AlertDialog.Builder(this.context)
             .setView(dialogBinding.root)
-            .setNegativeButton("ОТМЕНА"){ dialog, which ->
+            .setNegativeButton("ОТМЕНА") { dialog, which ->
                 if (fromSwitch) binding.deadlineSwitch.isChecked = false
             }
             .setPositiveButton("ГОТОВО") { _, _ ->
@@ -108,17 +112,31 @@ class TaskFragment : Fragment() {
             .create()
         dialogBinding.calendar.setOnDateChangeListener { _, y, m, d ->
             titleFiller(LocalDate.of(y, m + 1, d))
-           }
+        }
 
         val initialDate = binding.deadlineText.text.toString().toUnixTime()
             .let { if (it == 0L) System.currentTimeMillis() else it }
 
         dialogBinding.calendar.setDate(initialDate, true, true)
-        titleFiller(LocalDate.ofEpochDay(dialogBinding.calendar.date / (24*60*60*1000) + 1))
+        titleFiller(LocalDate.ofEpochDay(dialogBinding.calendar.date / (24 * 60 * 60 * 1000) + 1))
 
         dialog.show()
     }
 
+    // Makes the "Button" active or inactive
+    private fun setDeleteState(state: Boolean) {
+        val color = if (state) requireContext().getColor(R.color.red)
+        else requireContext().getColor(R.color.color_light_gray)
+        with(binding.deleteButton) {
+            isClickable = state
+            tag = state
+            setTextColor(color)
+            compoundDrawables[0].setTint(color)
+            if (state) setOnClickListener {
+                Snackbar.make(binding.root, "Delete", Snackbar.LENGTH_SHORT).show()
+            }
+        }
+    }
 
     // TaskFragment takes parameters ScrollingFragment
     companion object {

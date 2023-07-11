@@ -76,12 +76,12 @@ fun todoItemFromRandom(): TodoItem {
 
 fun newTask(): TodoItem{
     return TodoItem(
-        id = UUID.randomUUID().toString(),
+        id = "",  // empty string marks a new todoItem
         text = "",
         importance = Importance.COMMON,
         deadline = null,
         isCompleted = false,
-        dateCreated = System.currentTimeMillis(),
+        dateCreated = 0,
         dateModified = null
     )
 }
