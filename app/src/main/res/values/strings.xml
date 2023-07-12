@@ -27,5 +27,7 @@
     <string name="popup_menu_up">Вверх</string>
     <string name="popup_menu_down">Вниз</string>
     <string name="popup_menu_remove">Удалить</string>
+    <string name="calendar_cancel">ОТМЕНА</string>
+    <string name="calendar_ok">ГОТОВО</string>
 
 </resources>

@@ -11,13 +11,10 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.way2mars.kotlin.todoapp.R
-import com.way2mars.kotlin.todoapp.TodoApplication
 import com.way2mars.kotlin.todoapp.adapter.TodoItemActionListener
 import com.way2mars.kotlin.todoapp.adapter.TodoRecyclerAdapter
 import com.way2mars.kotlin.todoapp.databinding.FragmentScrollingBinding
 import com.way2mars.kotlin.todoapp.model.TodoItem
-import com.way2mars.kotlin.todoapp.model.TodoItemListener
-import com.way2mars.kotlin.todoapp.model.TodoItemsRepository
 import kotlin.properties.Delegates
 
 
@@ -57,7 +54,8 @@ class ScrollingFragment : Fragment() {
             }
 
             override fun onRemove(todoItem: TodoItem) {
-                Snackbar.make(binding.root, "Remove", Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(binding.root, "Заметка удалена", Snackbar.LENGTH_SHORT).show()
+                Log.d(TAG, "adapter :: onRemove")
                 viewModel.removeItem(todoItem)
             }
 
@@ -75,7 +73,6 @@ class ScrollingFragment : Fragment() {
         binding.todoRecyclerView.layoutManager = layoutManager
         binding.todoRecyclerView.adapter = adapter
 
-
         // FAB listener
         binding.fab.setOnClickListener {
             Log.d(TAG, "FAB onClick")
@@ -83,8 +80,7 @@ class ScrollingFragment : Fragment() {
         }
 
         binding.eyeButton.setOnCheckedChangeListener{ view, isChecked ->
-            Snackbar.make(binding.root, "Eye button", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
+            Log.d(TAG, "Eye button - onCheckedChangeListener")
             viewModel.setFilter(isChecked)
             eyeState = isChecked
         }

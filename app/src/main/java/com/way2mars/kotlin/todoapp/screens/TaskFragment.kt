@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.SwitchCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -41,36 +42,38 @@ class TaskFragment : Fragment() {
         binding = FragmentTaskBinding.inflate(layoutInflater, container, false)
 
         with(binding) {
+
+            spinnerAdapter = SpinnerAdapter(listOf(Importance.LOW, Importance.COMMON, Importance.HIGH)).
+            also { importanceSpinner.adapter = it }
+
             viewModel.task.observe(viewLifecycleOwner, Observer {
                 editTextTask.setText(it.text)
                 deadlineText.text = it.deadline.toFormatString()
+                deadlineSwitch.isChecked = it.deadline != null
+                importanceSpinner.setSelection(when(it.importance){
+                    Importance.LOW -> 0
+                    Importance.COMMON -> 1
+                    Importance.HIGH -> 2
+                })
+                // Paints delete button gray if .id is empty or makes it red and clickable
+                setDeleteButtonState(it.id.isNotEmpty())
             })
 
-            deleteButton.setOnClickListener {
-                // probably we should check the element
-                viewModel.removeTask()
-                contract().goBack()
-            }
-
             deadlineSwitch.setOnCheckedChangeListener { compoundButton, isChecked ->
-                if (isChecked) {
-                    calendarDialog(fromSwitch = true)
-                    deadlineText.visibility = View.VISIBLE
-                } else {
-                    deadlineText.visibility = View.INVISIBLE
-                }
+                deadlineText.visibility = if (isChecked) View.VISIBLE else View.INVISIBLE
             }
-
-            deadlineText.setOnClickListener { calendarDialog(fromSwitch = false) }
-
-            spinnerAdapter = SpinnerAdapter(
-                listOf(Importance.LOW, Importance.COMMON, Importance.HIGH)
-            )  // .context
-
-            importanceSpinner.adapter = spinnerAdapter
-
-            // Paints delete button gray if .id is empty or makes it red and clickable
-            setDeleteState((viewModel.task.value?.id?.length ?: 0) != 0)
+            deadlineSwitch.setOnClickListener {
+                val switch = it as SwitchCompat
+                Snackbar.make(binding.root, switch.isChecked.toString(), Snackbar.LENGTH_SHORT).show()
+                if (deadlineText.text.isEmpty())
+                    calendarDialog(fromSwitch = true)
+            }
+            deadlineText.setOnClickListener {
+                calendarDialog(fromSwitch = false)
+                Snackbar.make(binding.root, deadlineText.text.toString(), Snackbar.LENGTH_SHORT).show()
+            }
+            closeButton.setOnClickListener { contract().goBack() }
+            saveTask.setOnClickListener { saveTask() }
         }
         return binding.root
     }
@@ -98,10 +101,10 @@ class TaskFragment : Fragment() {
 
         val dialog = AlertDialog.Builder(this.context)
             .setView(dialogBinding.root)
-            .setNegativeButton("ОТМЕНА") { dialog, which ->
+            .setNegativeButton(getString(R.string.calendar_cancel)) { dialog, which ->
                 if (fromSwitch) binding.deadlineSwitch.isChecked = false
             }
-            .setPositiveButton("ГОТОВО") { _, _ ->
+            .setPositiveButton(getString(R.string.calendar_ok)) { _, _ ->
                 dateString?.let {
                     binding.deadlineText.text = it
                 }
@@ -124,18 +127,25 @@ class TaskFragment : Fragment() {
     }
 
     // Makes the "Button" active or inactive
-    private fun setDeleteState(state: Boolean) {
+    private fun setDeleteButtonState(state: Boolean) {
         val color = if (state) requireContext().getColor(R.color.red)
         else requireContext().getColor(R.color.color_light_gray)
         with(binding.deleteButton) {
             isClickable = state
-            tag = state
+           // tag = state
             setTextColor(color)
             compoundDrawables[0].setTint(color)
             if (state) setOnClickListener {
-                Snackbar.make(binding.root, "Delete", Snackbar.LENGTH_SHORT).show()
+                // probably we should check the element
+                viewModel.removeTask()
+                contract().goBack()
             }
         }
+    }
+
+    private fun saveTask(){
+
+        Snackbar.make(binding.root, "Not yet implemented", Snackbar.LENGTH_SHORT).show()
     }
 
     // TaskFragment takes parameters ScrollingFragment
