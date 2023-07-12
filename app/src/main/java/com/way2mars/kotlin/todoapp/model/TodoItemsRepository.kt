@@ -41,7 +41,7 @@ class TodoItemsRepository {
 
     fun getById(id: String): TodoItem {
         if (id == "") return newTask()
-        val task = filteredItems.firstOrNull { it.id == id } ?: TestException()
+        val task = unfilteredItems.firstOrNull { it.id == id } ?: TestException()
         return task as TodoItem
     }
 
@@ -71,12 +71,16 @@ class TodoItemsRepository {
     }
 
     fun moveItem(todoItem: TodoItem, moveBy: Int) {
-        val oldIndex = unfilteredItems.indexOfFirst { it.id == todoItem.id }
-        if (oldIndex == -1) return
+        val oldRawIndex = unfilteredItems.indexOfFirst { it.id == todoItem.id }
+        if (oldRawIndex == -1) return
 
-        val newIndex = oldIndex + moveBy
+        val oldIndexFiltered = filteredItems.indexOfFirst { it.id == todoItem.id }
+        val idOfOther = filteredItems[oldIndexFiltered + moveBy].id
+        val newRawIndex = unfilteredItems.indexOfFirst { it.id == idOfOther }
+        if (newRawIndex == -1) return
+
         unfilteredItems = ArrayList(unfilteredItems)
-        Collections.swap(unfilteredItems, oldIndex, newIndex)
+        Collections.swap(unfilteredItems, oldRawIndex, newRawIndex)
         notifyChanges()
     }
 
