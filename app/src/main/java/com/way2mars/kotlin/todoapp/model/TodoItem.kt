@@ -74,7 +74,7 @@ fun todoItemFromRandom(): TodoItem {
     )
 }
 
-fun newTask(): TodoItem{
+fun newEmptyTask(): TodoItem{
     return TodoItem(
         id = "",  // empty string marks a new todoItem
         text = "",

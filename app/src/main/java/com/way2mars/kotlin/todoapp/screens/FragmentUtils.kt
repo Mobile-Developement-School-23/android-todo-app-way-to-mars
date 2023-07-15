@@ -8,16 +8,18 @@ import com.way2mars.kotlin.todoapp.TodoApplication
 
 class ViewModelFactory(
     private val app: TodoApplication
-) : ViewModelProvider.Factory{
+) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        val viewModel = when(modelClass){
+        val viewModel = when (modelClass) {
             ScrollingViewModel::class.java -> {
                 ScrollingViewModel(app.repository)
             }
+
             TaskViewModel::class.java -> {
                 TaskViewModel(app.repository)
             }
+
             else -> {
                 return super.create(modelClass)
             }

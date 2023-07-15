@@ -15,7 +15,6 @@ import com.way2mars.kotlin.todoapp.adapter.TodoItemActionListener
 import com.way2mars.kotlin.todoapp.adapter.TodoRecyclerAdapter
 import com.way2mars.kotlin.todoapp.databinding.FragmentScrollingBinding
 import com.way2mars.kotlin.todoapp.model.TodoItem
-import kotlin.properties.Delegates
 
 
 class ScrollingFragment : Fragment() {
@@ -24,23 +23,16 @@ class ScrollingFragment : Fragment() {
     private lateinit var adapter: TodoRecyclerAdapter
 
     private val viewModel: ScrollingViewModel by viewModels { factory() }
-//    private val todoItemsRepository: TodoItemsRepository
-//        get() = (activity?.applicationContext as TodoApplication).repository
-//
-//    private val listener: TodoItemListener = { tasks: List<TodoItem> ->
-//        adapter.tasks = tasks
-//    }
-    private var eyeState by Delegates.notNull<Boolean>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        eyeState = savedInstanceState?.getBoolean(KEY_EYE_BUTTON_STATE) ?: true
     }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?): View {
+        savedInstanceState: Bundle?
+    ): View {
 
         binding = FragmentScrollingBinding.inflate(inflater, container, false)
         adapter = TodoRecyclerAdapter(object : TodoItemActionListener {
@@ -79,19 +71,18 @@ class ScrollingFragment : Fragment() {
             contract().createNewTask()
         }
 
-        binding.eyeButton.setOnCheckedChangeListener{ view, isChecked ->
+        binding.eyeButton.setOnCheckedChangeListener { view, isChecked ->
             Log.d(TAG, "Eye button - onCheckedChangeListener")
             viewModel.setFilter(isChecked)
-            eyeState = isChecked
         }
-        binding.eyeButton.isChecked = eyeState
+        binding.eyeButton.isChecked = viewModel.filterState
 
         return binding.root
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putBoolean(KEY_EYE_BUTTON_STATE, eyeState)
+        //outState.putBoolean(KEY_EYE_BUTTON_STATE, eyeState)
         Log.d(TAG, "onSaveInstanceState")
     }
 
@@ -100,9 +91,10 @@ class ScrollingFragment : Fragment() {
         Log.d(TAG, "onDestroyView")
     }
 
-    companion object{
+    companion object {
         private const val KEY_EYE_BUTTON_STATE = "KEY_EYE_BUTTON_STATE"
 
-        @JvmStatic private val TAG = ScrollingFragment::class.java.simpleName
+        @JvmStatic
+        private val TAG = ScrollingFragment::class.java.simpleName
     }
 }

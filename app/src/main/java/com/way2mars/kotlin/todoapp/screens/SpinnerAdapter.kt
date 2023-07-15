@@ -20,18 +20,19 @@ class SpinnerAdapter(
 
     override fun getView(position: Int, view: View?, parent: ViewGroup): View {
         val binding: SpinnerItemBinding =
-            view?.tag as SpinnerItemBinding? ?:
-            createBinding(parent.context)
+            view?.tag as SpinnerItemBinding? ?: createBinding(parent.context)
 
-        when(getItem(position)){
+        when (getItem(position)) {
             Importance.LOW -> {
                 binding.spinnerText.text = "Низкая"
                 binding.spinnerIcon.setImageDrawable(TodoApplication.iconImportanceLow)
             }
+
             Importance.COMMON -> {
                 binding.spinnerText.text = "Обычная"
                 binding.spinnerIcon.setImageDrawable(TodoApplication.iconImportanceCommon)
             }
+
             Importance.HIGH -> {
                 binding.spinnerText.text = "Высокая"
                 binding.spinnerIcon.setImageDrawable(TodoApplication.iconImportanceHigh)
@@ -41,7 +42,7 @@ class SpinnerAdapter(
         return binding.root
     }
 
-    private fun createBinding(context: Context): SpinnerItemBinding{
+    private fun createBinding(context: Context): SpinnerItemBinding {
         val binding = SpinnerItemBinding.inflate(LayoutInflater.from(context))
         binding.root.tag = binding
         return binding

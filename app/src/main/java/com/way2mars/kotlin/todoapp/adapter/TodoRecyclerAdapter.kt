@@ -21,7 +21,7 @@ import com.way2mars.kotlin.todoapp.model.Importance
 import com.way2mars.kotlin.todoapp.model.TodoItem
 import com.way2mars.kotlin.todoapp.utils.toFormatString
 
-interface TodoItemActionListener{
+interface TodoItemActionListener {
     fun onMarkDone(todoItem: TodoItem)
     fun onGetInfo(todoItem: TodoItem)
     fun onRemove(todoItem: TodoItem)
@@ -52,11 +52,11 @@ class TodoDiffCallback(
 }
 
 
-class TodoRecyclerAdapter(private val todoItemActionListener: TodoItemActionListener )
-    : RecyclerView.Adapter<TodoRecyclerAdapter.TodoViewHolder>(), View.OnClickListener, View.OnLongClickListener {
+class TodoRecyclerAdapter(private val todoItemActionListener: TodoItemActionListener) :
+    RecyclerView.Adapter<TodoRecyclerAdapter.TodoViewHolder>(), View.OnClickListener, View.OnLongClickListener {
 
     var tasks: List<TodoItem> = emptyList()
-        set(newData){
+        set(newData) {
             val diffCallback = TodoDiffCallback(field, newData)
             val diffResult = DiffUtil.calculateDiff(diffCallback, true)
             field = newData
@@ -124,7 +124,7 @@ class TodoRecyclerAdapter(private val todoItemActionListener: TodoItemActionList
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val binding  = ViewTodoItemBinding.inflate(inflater, parent, false)
+        val binding = ViewTodoItemBinding.inflate(inflater, parent, false)
 
         binding.root.setOnLongClickListener(this)
         binding.itemInfo.setOnClickListener(this)
@@ -142,10 +142,11 @@ class TodoRecyclerAdapter(private val todoItemActionListener: TodoItemActionList
     override fun onClick(v: View) {
         val task = v.tag as TodoItem
 
-        when(v.id){
+        when (v.id) {
             id.item_info -> {
                 todoItemActionListener.onGetInfo(task)
             }
+
             id.item_checkbox -> {
                 todoItemActionListener.onMarkDone(task)
             }
@@ -153,8 +154,8 @@ class TodoRecyclerAdapter(private val todoItemActionListener: TodoItemActionList
     }
 
     override fun onLongClick(v: View): Boolean {
-        Log.d("111","Long click")
-        when(v.id){
+        Log.d("111", "Long click")
+        when (v.id) {
             id.item_info -> return false
             id.item_checkbox -> return false
             else -> showPopupMenu(v)
@@ -180,13 +181,15 @@ class TodoRecyclerAdapter(private val todoItemActionListener: TodoItemActionList
         popupMenu.menu.add(0, ID_REMOVE, Menu.NONE, context.getString(R.string.popup_menu_remove))
 
         popupMenu.setOnMenuItemClickListener {
-            when(it.itemId){
+            when (it.itemId) {
                 ID_MOVE_UP -> {
                     todoItemActionListener.onTaskMove(task, -1)
                 }
+
                 ID_MOVE_DOWN -> {
                     todoItemActionListener.onTaskMove(task, 1)
                 }
+
                 ID_REMOVE -> {
                     todoItemActionListener.onRemove(task)
                 }
@@ -197,7 +200,7 @@ class TodoRecyclerAdapter(private val todoItemActionListener: TodoItemActionList
         popupMenu.show()
     }
 
-    companion object{
+    companion object {
         private const val ID_MOVE_UP = 1
         private const val ID_MOVE_DOWN = 2
         private const val ID_REMOVE = 3

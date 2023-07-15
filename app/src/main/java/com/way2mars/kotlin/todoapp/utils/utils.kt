@@ -16,28 +16,15 @@ fun String?.toUnixTime(): Long {
     var date: Date? = null
     try {
         date = SimpleDateFormat("d MMMM yyyy", Locale.getDefault()).parse(this) ?: return 0
-    }
-    catch (e: Exception){
+    } catch (e: Exception) {
         e.printStackTrace()
     }
     if (date == null) {
         try {
             date = SimpleDateFormat("d-MM-yyyy", Locale.getDefault()).parse(this) ?: return 0
-        }
-        catch (e: Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
         }
     }
     return date?.time ?: 0
 }
-
-
-
-
-// dp --> pixels
-//val Number.toPx
-//    get() = TypedValue.applyDimension(
-//        TypedValue.COMPLEX_UNIT_DIP,
-//        this.toFloat(),
-//        Resources.getSystem().displayMetrics
-//    )

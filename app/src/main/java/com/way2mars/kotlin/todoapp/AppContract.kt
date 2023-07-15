@@ -1,7 +1,6 @@
 package com.way2mars.kotlin.todoapp
 
 import com.way2mars.kotlin.todoapp.model.TodoItem
-import com.way2mars.kotlin.todoapp.model.TodoItemsRepository
 
 interface AppContract {
 
@@ -9,6 +8,5 @@ interface AppContract {
     fun createNewTask()
     fun goBack()
     fun toast(messageRes: Int)
-    fun saveItem()
-    fun deleteItem()
+
 }

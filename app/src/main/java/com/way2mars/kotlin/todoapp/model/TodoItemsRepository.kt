@@ -18,7 +18,12 @@ typealias TodoItemListener = (todoItem: List<TodoItem>) -> Unit
 
 class TodoItemsRepository {
 
-    private var filter = false
+    public var filter = false
+        set(value){
+                field = value
+                notifyChanges()
+        }
+        get() = field
 
     private var unfilteredItems = mutableListOf<TodoItem>()
     private val filteredItems
@@ -31,23 +36,11 @@ class TodoItemsRepository {
         for (i in 1..20) unfilteredItems.add(todoItemFromRandom())
     }
 
-//    fun getAllTasks() = todoItems
-//
-//    fun getSize() = todoItems.size
-//
-//    fun getItem(index: Int) = todoItems[index]
-
     fun getDoneCount(): Int = unfilteredItems.filter { it.isCompleted }.size
 
     fun getById(id: String): TodoItem {
-        if (id == "") return newTask()
         val task = unfilteredItems.firstOrNull { it.id == id } ?: TestException()
         return task as TodoItem
-    }
-
-    fun setFilter(flag: Boolean) {
-        filter = flag
-        notifyChanges()
     }
 
     fun markDone(todoItem: TodoItem?) {
@@ -67,6 +60,21 @@ class TodoItemsRepository {
 
         unfilteredItems = ArrayList(unfilteredItems)
         unfilteredItems.removeAt(index)
+        notifyChanges()
+    }
+
+    fun updateItem(todoItem: TodoItem){
+        val index = unfilteredItems.indexOfFirst { it.id == todoItem.id }
+        unfilteredItems[index] = todoItem.copy()
+        notifyChanges()
+    }
+
+    fun addItem(todoItem: TodoItem){
+        unfilteredItems.add(0,
+            todoItem.copy(
+                id = UUID.randomUUID().toString(),
+                dateCreated = System.currentTimeMillis(),
+        ))
         notifyChanges()
     }
 

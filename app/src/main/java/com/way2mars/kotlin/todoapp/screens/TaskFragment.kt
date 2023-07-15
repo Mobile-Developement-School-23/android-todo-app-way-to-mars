@@ -2,6 +2,7 @@ package com.way2mars.kotlin.todoapp.screens
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,7 +32,11 @@ class TaskFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel.loadTask(requireArguments().getString(TAG_USER_ID, ""))  // default = ""
+        when (val id = requireArguments().getString(TAG_USER_ID, "")) {
+            "" -> viewModel.createEmptyTask()
+            else -> viewModel.loadTask(id)
+        }
+        Log.d(TAG, "OnCreate id = $id")
     }
 
     override fun onCreateView(
@@ -41,20 +46,29 @@ class TaskFragment : Fragment() {
     ): View {
         binding = FragmentTaskBinding.inflate(layoutInflater, container, false)
 
+        Log.d(TAG, "OnCreateView")
+
         with(binding) {
 
-            spinnerAdapter = SpinnerAdapter(listOf(Importance.LOW, Importance.COMMON, Importance.HIGH)).
-            also { importanceSpinner.adapter = it }
+            spinnerAdapter = SpinnerAdapter(
+                listOf(
+                    Importance.LOW,
+                    Importance.COMMON,
+                    Importance.HIGH
+                )
+            ).also { importanceSpinner.adapter = it }
 
             viewModel.task.observe(viewLifecycleOwner, Observer {
                 editTextTask.setText(it.text)
                 deadlineText.text = it.deadline.toFormatString()
                 deadlineSwitch.isChecked = it.deadline != null
-                importanceSpinner.setSelection(when(it.importance){
-                    Importance.LOW -> 0
-                    Importance.COMMON -> 1
-                    Importance.HIGH -> 2
-                })
+                importanceSpinner.setSelection(
+                    when (it.importance) {
+                        Importance.LOW -> 0
+                        Importance.COMMON -> 1
+                        Importance.HIGH -> 2
+                    }
+                )
                 // Paints delete button gray if .id is empty or makes it red and clickable
                 setDeleteButtonState(it.id.isNotEmpty())
             })
@@ -76,6 +90,21 @@ class TaskFragment : Fragment() {
             saveTask.setOnClickListener { saveTask() }
         }
         return binding.root
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        saveIntermediateState()
+    }
+
+    private fun saveIntermediateState() {
+        with(binding) {
+            viewModel.saveIntermediateState(
+                text = editTextTask.text.toString(),
+                importance = importanceSpinner.selectedItem as Importance,
+                deadline = if (deadlineSwitch.isChecked) deadlineText.text.toString().toUnixTime() else null
+            )
+        }
     }
 
     private fun calendarDialog(fromSwitch: Boolean) {
@@ -132,7 +161,6 @@ class TaskFragment : Fragment() {
         else requireContext().getColor(R.color.color_light_gray)
         with(binding.deleteButton) {
             isClickable = state
-           // tag = state
             setTextColor(color)
             compoundDrawables[0].setTint(color)
             if (state) setOnClickListener {
@@ -143,15 +171,17 @@ class TaskFragment : Fragment() {
         }
     }
 
-    private fun saveTask(){
-
-        Snackbar.make(binding.root, "Not yet implemented", Snackbar.LENGTH_SHORT).show()
+    private fun saveTask() {
+        Snackbar.make(binding.root, "Saving...", Snackbar.LENGTH_SHORT).show()
+        saveIntermediateState()
+        viewModel.saveTask()
     }
 
     // TaskFragment takes parameters ScrollingFragment
     companion object {
 
         private const val TAG_USER_ID = "TAG_USER_ID"
+        private const val TAG = "TaskFragment"
 
         fun newInstance(userId: String): TaskFragment {
             val fragment = TaskFragment()

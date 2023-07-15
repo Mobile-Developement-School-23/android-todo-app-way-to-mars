@@ -51,13 +51,4 @@ class MainActivity : AppCompatActivity(), AppContract {
         Snackbar.make(binding.root, messageRes, Snackbar.LENGTH_SHORT).show()
     }
 
-    override fun saveItem() {
-        TODO("Not yet implemented")
-    }
-
-    override fun deleteItem() {
-        TODO("Not yet implemented")
-    }
-
-
 }

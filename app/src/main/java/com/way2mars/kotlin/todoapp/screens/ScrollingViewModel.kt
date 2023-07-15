@@ -3,18 +3,23 @@ package com.way2mars.kotlin.todoapp.screens
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.way2mars.kotlin.todoapp.TodoApplication
 import com.way2mars.kotlin.todoapp.model.TodoItem
 import com.way2mars.kotlin.todoapp.model.TodoItemListener
 import com.way2mars.kotlin.todoapp.model.TodoItemsRepository
 
+private const val KEY_FILTER_FLAG = "key_filter_flag"
+
 class ScrollingViewModel(
     private val repository: TodoItemsRepository
-): ViewModel() {
+) : ViewModel() {
 
     private val _tasks = MutableLiveData<List<TodoItem>>()
     val tasks: LiveData<List<TodoItem>> = _tasks
     val countDone
         get() = repository.getDoneCount()
+    val filterState
+        get() = repository.filter
 
     private val listener: TodoItemListener = {
         _tasks.value = it
@@ -22,6 +27,7 @@ class ScrollingViewModel(
 
     init {
         loadItems()
+        loadState()
     }
 
     override fun onCleared() {
@@ -29,11 +35,11 @@ class ScrollingViewModel(
         repository.removeListener(listener)
     }
 
-    fun loadItems(){
+    fun loadItems() {
         repository.addListener(listener)
     }
 
-    fun moveItem(task: TodoItem, moveBy: Int){
+    fun moveItem(task: TodoItem, moveBy: Int) {
         repository.moveItem(task, moveBy)
     }
 
@@ -41,12 +47,18 @@ class ScrollingViewModel(
         repository.removeItem(task)
     }
 
-    fun markDone(task: TodoItem){
+    fun markDone(task: TodoItem) {
         repository.markDone(task)
     }
 
-    fun setFilter(flag: Boolean){
-        repository.setFilter(flag)
+    fun setFilter(flag: Boolean) {
+        repository.filter = flag
+        TodoApplication.sharedPreferences.edit().putBoolean(KEY_FILTER_FLAG, flag).apply()
+    }
+
+    fun loadState() {
+        val flag = TodoApplication.sharedPreferences.getBoolean(KEY_FILTER_FLAG, true)
+        repository.filter = flag
     }
 
 }
