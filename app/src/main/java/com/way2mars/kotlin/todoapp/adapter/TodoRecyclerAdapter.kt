@@ -1,5 +1,7 @@
 package com.way2mars.kotlin.todoapp.adapter
 
+import android.content.res.ColorStateList
+import android.graphics.drawable.Drawable
 import android.text.SpannableString
 import android.text.style.StrikethroughSpan
 import android.util.Log
@@ -11,11 +13,12 @@ import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.TextView
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.way2mars.kotlin.todoapp.R
 import com.way2mars.kotlin.todoapp.R.*
-import com.way2mars.kotlin.todoapp.TodoApplication
 import com.way2mars.kotlin.todoapp.databinding.ViewTodoItemBinding
 import com.way2mars.kotlin.todoapp.model.Importance
 import com.way2mars.kotlin.todoapp.model.TodoItem
@@ -27,7 +30,6 @@ interface TodoItemActionListener {
     fun onRemove(todoItem: TodoItem)
     fun onTaskMove(todoItem: TodoItem, moveBy: Int)
 }
-
 
 class TodoDiffCallback(
     private val oldList: List<TodoItem>,
@@ -63,7 +65,12 @@ class TodoRecyclerAdapter(private val todoItemActionListener: TodoItemActionList
             diffResult.dispatchUpdatesTo(this)
         }
 
-    inner class TodoViewHolder(val binding: ViewTodoItemBinding) : RecyclerView.ViewHolder(binding.root) {
+    private lateinit var colorStateListRed: ColorStateList
+    private var imageTypeLow: Drawable? = null
+    private var imageTypeHigh: Drawable? = null
+    private var colorStateListGreenLight: ColorStateList? = null
+
+    inner class TodoViewHolder(private val binding: ViewTodoItemBinding) : RecyclerView.ViewHolder(binding.root) {
         private val checkBox: CheckBox = itemView.findViewById(id.item_checkbox)
         private val typeImage: ImageView = itemView.findViewById(id.item_type_img)
         private val message: TextView = itemView.findViewById(id.item_message)
@@ -81,19 +88,19 @@ class TodoRecyclerAdapter(private val todoItemActionListener: TodoItemActionList
             when (item.importance) {
                 Importance.LOW -> {
                     typeImage.visibility = View.VISIBLE
-                    typeImage.setImageDrawable(TodoApplication.imageTypeLow)
-                    checkBox.buttonTintList = TodoApplication.colorStateListGreenLight
+                    typeImage.setImageDrawable(imageTypeLow)
+                    checkBox.buttonTintList = colorStateListGreenLight
                 }
 
                 Importance.COMMON -> {
                     typeImage.visibility = View.GONE
-                    checkBox.buttonTintList = TodoApplication.colorStateListGreenLight
+                    checkBox.buttonTintList = colorStateListGreenLight
                 }
 
                 Importance.HIGH -> {
                     typeImage.visibility = View.VISIBLE
-                    typeImage.setImageDrawable(TodoApplication.imageTypeHigh)
-                    checkBox.buttonTintList = TodoApplication.colorStateListRed
+                    typeImage.setImageDrawable(imageTypeHigh)
+                    checkBox.buttonTintList = colorStateListRed
                 }
             }
 
@@ -129,6 +136,19 @@ class TodoRecyclerAdapter(private val todoItemActionListener: TodoItemActionList
         binding.root.setOnLongClickListener(this)
         binding.itemInfo.setOnClickListener(this)
         binding.itemCheckbox.setOnClickListener(this)
+
+        colorStateListRed = ColorStateList.valueOf(parent.resources.getColor(R.color.red, null))
+        imageTypeLow = ResourcesCompat.getDrawable(parent.resources, R.drawable.arrow, null)
+        imageTypeHigh = ResourcesCompat.getDrawable(parent.resources, R.drawable.high_priority, null)
+        colorStateListGreenLight = ColorStateList(
+            arrayOf(
+                intArrayOf(android.R.attr.state_checked),
+                intArrayOf(-android.R.attr.state_checked)
+            ), intArrayOf(
+                ContextCompat.getColor(parent.context, R.color.green_light_theme),
+                ContextCompat.getColor(parent.context, R.color.gray_light_light_theme)
+            )
+        )
 
         return TodoViewHolder(binding)
     }

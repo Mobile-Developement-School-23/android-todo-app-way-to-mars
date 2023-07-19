@@ -16,13 +16,16 @@ class ScrollingViewModel(
 
     private val _tasks = MutableLiveData<List<TodoItem>>()
     val tasks: LiveData<List<TodoItem>> = _tasks
-    val countDone
-        get() = repository.getDoneCount()
+
+    private val _countDone = MutableLiveData<Int>()
+    val countDone: LiveData<Int> = _countDone
+
     val filterState
         get() = repository.filter
 
     private val listener: TodoItemListener = {
         _tasks.value = it
+        _countDone.value = repository.getDoneCount()
     }
 
     init {

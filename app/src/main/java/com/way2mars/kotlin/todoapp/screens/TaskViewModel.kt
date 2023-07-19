@@ -19,14 +19,13 @@ class TaskViewModel(
     fun loadTask(taskId: String) {
         if (_task.value != null) return  // do nothing if task is already loaded up
         try {
-            _task.value = repository.getById(taskId)
+            if (taskId.isEmpty())
+                _task.value = newEmptyTask()
+            else
+                _task.value = repository.getById(taskId)
         } catch (e: TestException) {
             e.printStackTrace()
         }
-    }
-
-    fun createEmptyTask() {
-        _task.value = newEmptyTask()
     }
 
     fun removeTask() {

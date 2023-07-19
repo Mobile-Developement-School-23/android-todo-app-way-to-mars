@@ -1,13 +1,11 @@
 package com.way2mars.kotlin.todoapp.screens
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.way2mars.kotlin.todoapp.R
@@ -21,16 +19,33 @@ class ScrollingFragment : Fragment() {
 
     private lateinit var binding: FragmentScrollingBinding
     private lateinit var adapter: TodoRecyclerAdapter
-
     private val viewModel: ScrollingViewModel by viewModels { factory() }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-
         binding = FragmentScrollingBinding.inflate(inflater, container, false)
+        setupAdapter()
+
+        viewModel.countDone.observe(viewLifecycleOwner) {
+            binding.textCountDone.text = getString(R.string.tasks_done, it)
+        }
+
+        binding.fab.setOnClickListener {
+            contract().createNewTask()
+        }
+
+        binding.eyeButton.setOnCheckedChangeListener { _, isChecked ->
+            viewModel.setFilter(isChecked)
+        }
+        binding.eyeButton.isChecked = viewModel.filterState
+
+        return binding.root
+    }
+
+    private fun setupAdapter() {
+        val layoutManager = LinearLayoutManager(requireContext())
+
         adapter = TodoRecyclerAdapter(object : TodoItemActionListener {
             override fun onMarkDone(todoItem: TodoItem) {
                 viewModel.markDone(todoItem)
@@ -50,32 +65,12 @@ class ScrollingFragment : Fragment() {
             }
         })
 
-        viewModel.tasks.observe(viewLifecycleOwner, Observer {
-            adapter.tasks = it
-            binding.textCountDone.text = getString(R.string.tasks_done, viewModel.countDone)
-        })
-
-        val layoutManager = LinearLayoutManager(requireContext())
         binding.todoRecyclerView.layoutManager = layoutManager
         binding.todoRecyclerView.adapter = adapter
 
-        binding.fab.setOnClickListener {
-            Log.d(TAG, "FAB onClick")
-            contract().createNewTask()
+        viewModel.tasks.observe(viewLifecycleOwner) {
+            adapter.tasks = it
         }
-
-        binding.eyeButton.setOnCheckedChangeListener { view, isChecked ->
-            Log.d(TAG, "Eye button - onCheckedChangeListener")
-            viewModel.setFilter(isChecked)
-        }
-        binding.eyeButton.isChecked = viewModel.filterState
-
-        return binding.root
     }
 
-    companion object {
-
-        @JvmStatic
-        private val TAG = ScrollingFragment::class.java.simpleName
-    }
 }

@@ -2,7 +2,6 @@ package com.way2mars.kotlin.todoapp.screens
 
 import android.app.AlertDialog
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +9,6 @@ import androidx.appcompat.widget.SwitchCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import com.google.android.material.snackbar.Snackbar
 import com.way2mars.kotlin.todoapp.R
 import com.way2mars.kotlin.todoapp.databinding.CalendarBinding
@@ -18,7 +16,6 @@ import com.way2mars.kotlin.todoapp.databinding.FragmentTaskBinding
 import com.way2mars.kotlin.todoapp.model.Importance
 import com.way2mars.kotlin.todoapp.utils.toFormatString
 import com.way2mars.kotlin.todoapp.utils.toUnixTime
-import java.lang.RuntimeException
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -32,11 +29,7 @@ class TaskFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        when (val id = requireArguments().getString(TAG_USER_ID, "")) {
-            "" -> viewModel.createEmptyTask()
-            else -> viewModel.loadTask(id)
-        }
-        Log.d(TAG, "OnCreate id = $id")
+        viewModel.loadTask(requireArguments().getString(TAG_USER_ID, ""))
     }
 
     override fun onCreateView(
@@ -45,8 +38,6 @@ class TaskFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentTaskBinding.inflate(layoutInflater, container, false)
-
-        Log.d(TAG, "OnCreateView")
 
         with(binding) {
 
@@ -58,7 +49,7 @@ class TaskFragment : Fragment() {
                 )
             ).also { importanceSpinner.adapter = it }
 
-            viewModel.task.observe(viewLifecycleOwner, Observer {
+            viewModel.task.observe(viewLifecycleOwner) {
                 editTextTask.setText(it.text)
                 deadlineText.text = it.deadline.toFormatString()
                 deadlineSwitch.isChecked = it.deadline != null
@@ -71,9 +62,9 @@ class TaskFragment : Fragment() {
                 )
                 // Paints delete button gray if .id is empty or makes it red and clickable
                 setDeleteButtonState(it.id.isNotEmpty())
-            })
+            }
 
-            deadlineSwitch.setOnCheckedChangeListener { compoundButton, isChecked ->
+            deadlineSwitch.setOnCheckedChangeListener { _, isChecked ->
                 deadlineText.visibility = if (isChecked) View.VISIBLE else View.INVISIBLE
             }
             deadlineSwitch.setOnClickListener {
@@ -130,7 +121,7 @@ class TaskFragment : Fragment() {
 
         val dialog = AlertDialog.Builder(this.context)
             .setView(dialogBinding.root)
-            .setNegativeButton(getString(R.string.calendar_cancel)) { dialog, which ->
+            .setNegativeButton(getString(R.string.calendar_cancel)) { _, _ ->
                 if (fromSwitch) binding.deadlineSwitch.isChecked = false
             }
             .setPositiveButton(getString(R.string.calendar_ok)) { _, _ ->
@@ -175,14 +166,13 @@ class TaskFragment : Fragment() {
         Snackbar.make(binding.root, "Saving...", Snackbar.LENGTH_SHORT).show()
         saveIntermediateState()
         viewModel.saveTask()
+        contract().goBack()
     }
 
     // TaskFragment takes parameters ScrollingFragment
     companion object {
 
         private const val TAG_USER_ID = "TAG_USER_ID"
-        private const val TAG = "TaskFragment"
-
         fun newInstance(userId: String): TaskFragment {
             val fragment = TaskFragment()
             fragment.arguments = bundleOf(TAG_USER_ID to userId)
