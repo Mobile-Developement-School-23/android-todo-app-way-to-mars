@@ -18,12 +18,11 @@ typealias TodoItemListener = (todoItem: List<TodoItem>) -> Unit
 
 class TodoItemsRepository {
 
-    public var filter = false
+    var filter = false
         set(value){
                 field = value
                 notifyChanges()
         }
-        get() = field
 
     private var unfilteredItems = mutableListOf<TodoItem>()
     private val filteredItems

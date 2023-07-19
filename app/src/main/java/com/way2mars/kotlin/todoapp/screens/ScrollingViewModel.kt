@@ -35,7 +35,7 @@ class ScrollingViewModel(
         repository.removeListener(listener)
     }
 
-    fun loadItems() {
+    private fun loadItems() {
         repository.addListener(listener)
     }
 
@@ -56,7 +56,7 @@ class ScrollingViewModel(
         TodoApplication.sharedPreferences.edit().putBoolean(KEY_FILTER_FLAG, flag).apply()
     }
 
-    fun loadState() {
+    private fun loadState() {
         val flag = TodoApplication.sharedPreferences.getBoolean(KEY_FILTER_FLAG, true)
         repository.filter = flag
     }

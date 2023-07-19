@@ -170,15 +170,15 @@ class TodoRecyclerAdapter(private val todoItemActionListener: TodoItemActionList
         val task = view.tag as TodoItem
         val position = tasks.indexOfFirst { it.id == task.id }
 
-        popupMenu.menu.add(0, ID_MOVE_UP, Menu.NONE, context.getString(R.string.popup_menu_up))
+        popupMenu.menu.add(0, ID_MOVE_UP, Menu.NONE, context.getString(string.popup_menu_up))
             .apply {
                 isEnabled = position > 0
             }
-        popupMenu.menu.add(0, ID_MOVE_DOWN, Menu.NONE, context.getString(R.string.popup_menu_down))
+        popupMenu.menu.add(0, ID_MOVE_DOWN, Menu.NONE, context.getString(string.popup_menu_down))
             .apply {
                 isEnabled = position < tasks.size - 1
             }
-        popupMenu.menu.add(0, ID_REMOVE, Menu.NONE, context.getString(R.string.popup_menu_remove))
+        popupMenu.menu.add(0, ID_REMOVE, Menu.NONE, context.getString(string.popup_menu_remove))
 
         popupMenu.setOnMenuItemClickListener {
             when (it.itemId) {
@@ -205,6 +205,5 @@ class TodoRecyclerAdapter(private val todoItemActionListener: TodoItemActionList
         private const val ID_MOVE_DOWN = 2
         private const val ID_REMOVE = 3
     }
-
 
 }

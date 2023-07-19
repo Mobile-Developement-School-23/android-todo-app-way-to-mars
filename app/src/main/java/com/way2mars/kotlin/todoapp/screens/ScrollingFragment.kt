@@ -24,10 +24,6 @@ class ScrollingFragment : Fragment() {
 
     private val viewModel: ScrollingViewModel by viewModels { factory() }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -41,13 +37,11 @@ class ScrollingFragment : Fragment() {
             }
 
             override fun onGetInfo(todoItem: TodoItem) {
-                Log.d(TAG, "OnGetInfo")
                 contract().showDetailsScreen(todoItem)
             }
 
             override fun onRemove(todoItem: TodoItem) {
                 Snackbar.make(binding.root, "Заметка удалена", Snackbar.LENGTH_SHORT).show()
-                Log.d(TAG, "adapter :: onRemove")
                 viewModel.removeItem(todoItem)
             }
 
@@ -65,7 +59,6 @@ class ScrollingFragment : Fragment() {
         binding.todoRecyclerView.layoutManager = layoutManager
         binding.todoRecyclerView.adapter = adapter
 
-        // FAB listener
         binding.fab.setOnClickListener {
             Log.d(TAG, "FAB onClick")
             contract().createNewTask()
@@ -80,19 +73,7 @@ class ScrollingFragment : Fragment() {
         return binding.root
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        //outState.putBoolean(KEY_EYE_BUTTON_STATE, eyeState)
-        Log.d(TAG, "onSaveInstanceState")
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        Log.d(TAG, "onDestroyView")
-    }
-
     companion object {
-        private const val KEY_EYE_BUTTON_STATE = "KEY_EYE_BUTTON_STATE"
 
         @JvmStatic
         private val TAG = ScrollingFragment::class.java.simpleName
