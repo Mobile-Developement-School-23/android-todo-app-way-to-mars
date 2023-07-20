@@ -30,9 +30,9 @@ data class TodoItem(
     val text: String,
     val importance: Importance,
     val deadline: Long?,  // Date?
-    var isCompleted: Boolean = false,
+    val isCompleted: Boolean = false,
     val dateCreated: Long,
-    var dateModified: Long? = null
+    val dateModified: Long? = null
 ) {
     override fun toString(): String {
         return "'$id' '$text' importance=$importance " +
@@ -43,7 +43,7 @@ data class TodoItem(
     }
 }
 
-// fabric method to create a random TodoItem
+// fabric method to create random TodoItem
 fun todoItemFromRandom(): TodoItem {
     return TodoItem(
        // id = x.toString().padStart(12, '0'),

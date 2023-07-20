@@ -3,17 +3,17 @@ package com.way2mars.kotlin.todoapp
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
-import android.content.res.ColorStateList
-import android.graphics.drawable.Drawable
-import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
+import com.way2mars.kotlin.todoapp.di.AppComponent
 import com.way2mars.kotlin.todoapp.model.TodoItemsRepository
+
 
 private const val SHARED_PREFS_STATE = "shared_prefs_state"
 
 class TodoApplication : Application() {
 
     val repository = TodoItemsRepository()
+
+    lateinit var appComponent: AppComponent
 
     companion object {
         lateinit var sharedPreferences: SharedPreferences
